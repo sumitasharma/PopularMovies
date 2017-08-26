@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">PopularMoviesStage1Sumita</string>
+    <string name="sort_by">Sort By</string>
+    <string name="popularity">Popularity</string>
+    <string name="rating">Rating</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="image">Movie Image</string>
+    <string name="title">Title :</string>
+    <string name="overview">Overview :</string>
+    <string name="user_ratings">User Ratings :</string>
+    <string name="release_date">Release Date :</string>
+</resources>
