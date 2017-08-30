@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.android.popularmoviesstage1sumita.utils.MovieDetails;
 import com.example.android.popularmoviesstage1sumita.utils.MoviesAdapter;
@@ -26,11 +27,9 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesClickListener {
     private final String POPULARITY = "popular";
-    private final String RATINGS = "top_rated";
     private final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mMoviesRecyclerView;
-    private MoviesAdapter mMoviesAdapter;
     private MovieDetails[] mMovieDetails = null;
 
     @Override
@@ -60,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        String RATINGS = "top_rated";
         int id = item.getItemId();
-        Context context = this;
         switch (id) {
             case R.id.popularity:
                 new FetchMovies(this).execute(POPULARITY);
@@ -87,7 +86,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
 
     private class FetchMovies extends AsyncTask<String, Void, MovieDetails[]> {
-        private Context mContext;
+
+        private final Context mContext;
 
         FetchMovies(Context context) {
             mContext = context;
@@ -125,13 +125,15 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
          */
         @Override
         protected void onPostExecute(MovieDetails[] movieDetails) {
-
+            MoviesAdapter moviesAdapter;
             if (movieDetails != null) {
+
                 mMovieDetails = movieDetails;
-                mMoviesAdapter = new MoviesAdapter(movieDetails, MainActivity.this, MainActivity.this);
+                moviesAdapter = new MoviesAdapter(movieDetails, MainActivity.this, MainActivity.this);
                 /* Setting the adapter in onPostExecute so the Movies Detail array isn't empty */
-                mMoviesRecyclerView.setAdapter(mMoviesAdapter);
+                mMoviesRecyclerView.setAdapter(moviesAdapter);
             } else {
+                Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By menu", Toast.LENGTH_LONG).show();
                 Log.i(TAG, "Post Execute Function. movie details null");
             }
         }

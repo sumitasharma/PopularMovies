@@ -50,7 +50,7 @@ public class MoviesDetailActivity extends AppCompatActivity {
      * Make Class FetchMovies for asynchronous task of getting the Movie Details from API Key
      */
     private class FetchMovies extends AsyncTask<String, Void, MovieDetails> {
-        private Context mContext;
+        private final Context mContext;
 
         FetchMovies(Context context) {
             mContext = context;

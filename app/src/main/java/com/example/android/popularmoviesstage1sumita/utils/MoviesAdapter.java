@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
  */
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerViewHolderMovies> {
     private MovieDetails[] mMovieDetails = null;
-    private Context mContext;
+    private final Context mContext;
     private MoviesClickListener mClickPositionListener = null;
 
     /**
@@ -48,8 +48,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
     @Override
     public RecyclerViewHolderMovies onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder, parent, false);
-        RecyclerViewHolderMovies viewHolderMovies = new RecyclerViewHolderMovies(view);
-        return viewHolderMovies;
+        return new RecyclerViewHolderMovies(view);
     }
 
     /**
@@ -79,7 +78,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
      * RecyclerViewHolderMovies is the viewHolder for MovieAdapter
      */
     class RecyclerViewHolderMovies extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView mMovieImage;
+        private final ImageView mMovieImage;
 
         RecyclerViewHolderMovies(View itemView) {
             super(itemView);

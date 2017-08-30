@@ -1,94 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context="com.example.android.popularmoviesstage1sumita.MoviesDetailActivity">
 
     <ImageView
         android:id="@+id/poster"
-        android:contentDescription="@string/movie_poster"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:scaleType="fitXY"
-        android:layout_margin="5dp"/>
-
-    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:text="@string/title"/>
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
+        android:layout_margin="5dp"
+        android:contentDescription="@string/movie_poster"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:text="@string/overview"/>
+                android:orientation="horizontal"
+                android:padding="10dp">
 
-            <TextView
-                android:id="@+id/synopsis"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"/>
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:text="@string/user_ratings"/>
-
-            <TextView
-                android:id="@+id/user_rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:text="@string/release_date"/>
+                android:orientation="vertical"
+                android:padding="10dp">
 
-            <TextView
-                android:id="@+id/release_date"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/overview"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/synopsis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_height="match_parent"
+                android:padding="10dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_ratings"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/user_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/release_date"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/release_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+        </LinearLayout>
 </LinearLayout>
+</ScrollView>
