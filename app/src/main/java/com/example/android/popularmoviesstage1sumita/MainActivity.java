@@ -2,7 +2,6 @@ package com.example.android.popularmoviesstage1sumita;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -26,7 +25,6 @@ import java.io.IOException;
 import java.net.URL;
 
 
-
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesClickListener {
     private final String POPULARITY = "popular";
     private final String TAG = MainActivity.class.getSimpleName();
@@ -42,23 +40,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mMoviesRecyclerView = (RecyclerView) findViewById(R.id.movies_recyclerview);
         mMoviesRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mMoviesRecyclerView.setHasFixedSize(true);
-        /* Reading from a SharedPreference file for the User Preference on sort by */
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        String defaultValue = sharedPref.getString("SortBy", POPULARITY);
         /* Calling the Asynchronous task FetchMovies */
-        new FetchMovies(this).execute(defaultValue);
+        new FetchMovies(this).execute(POPULARITY);
     }
-
-    /**
-     * Reading from a file for the Sort By
-     */
-    private void readFromFile(String sortby) {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("SortBy", sortby);
-        editor.apply();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,11 +63,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         int id = item.getItemId();
         switch (id) {
             case R.id.popularity:
-                readFromFile(POPULARITY);
                 new FetchMovies(this).execute(POPULARITY);
                 break;
             case R.id.rating:
-                readFromFile(RATINGS);
                 new FetchMovies(this).execute(RATINGS);
                 break;
         }
@@ -94,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     /**
      * Function calls the MovieDetailsActivity to display the details of the clicked Movie by passing MovieId
      */
-
 
     @Override
     public void onClickMovie(int moviePosition) {
@@ -151,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 /* Setting the adapter in onPostExecute so the Movies Detail array isn't empty */
                 mMoviesRecyclerView.setAdapter(moviesAdapter);
             } else {
-                Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By menu", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
                 Log.i(TAG, "Post Execute Function. movie details null");
             }
         }
