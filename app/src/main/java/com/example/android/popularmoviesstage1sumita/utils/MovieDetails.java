@@ -10,24 +10,6 @@ public class MovieDetails {
     private String releaseDate;
     private String rating;
     private String posterPath;
-    private  MovieReviewsDetail[] movieReviewsDetail;
-    private  MovieVideosDetail[] movieVideosDetail;
-
-    public MovieReviewsDetail[] getMovieReviewsDetail() {
-        return movieReviewsDetail;
-    }
-
-    public void setMovieReviewsDetail(MovieReviewsDetail[] movieReviewsDetail) {
-        this.movieReviewsDetail = movieReviewsDetail;
-    }
-
-    public MovieVideosDetail[] getMovieVideosDetail() {
-        return movieVideosDetail;
-    }
-
-    public void setMovieVideosDetail(MovieVideosDetail[] movieVideosDetail) {
-        this.movieVideosDetail = movieVideosDetail;
-    }
 
     public String getMovieTitle() {
         return movieTitle;

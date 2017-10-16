@@ -10,7 +10,4 @@
     <string name="overview">Overview :</string>
     <string name="user_ratings">User Ratings :</string>
     <string name="release_date">Release Date :</string>
-    <string name="save_as_favorite">Save As Favorite</string>
-    <string name="remove_from_favorite">Remove From Favorite</string>
-    <string name="my_favorite_movies">My Favorite Movies</string>
 </resources>

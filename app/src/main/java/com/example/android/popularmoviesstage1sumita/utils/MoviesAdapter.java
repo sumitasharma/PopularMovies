@@ -72,6 +72,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
 
         return mMovieDetails.length;
     }
+
+
     /**
      * RecyclerViewHolderMovies is the viewHolder for MovieAdapter
      */
