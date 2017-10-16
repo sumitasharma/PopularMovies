@@ -7,12 +7,12 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/screen_label"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:fullBackupContent="@xml/backup_descriptor">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop">
@@ -23,13 +23,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MoviesDetailActivity"
+            android:name=".DetailMain2Activity"
             android:label="@string/screen_label_detail">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
-
         </activity>
+
+        <provider
+            android:name=".data.MovieContentProvider"
+            android:authorities="com.example.android.popularmoviesstage1sumita"
+            android:exported="false"/>
     </application>
 
 </manifest>
