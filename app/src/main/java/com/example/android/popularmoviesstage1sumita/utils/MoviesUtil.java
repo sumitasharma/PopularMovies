@@ -1,12 +1,7 @@
 package com.example.android.popularmoviesstage1sumita.utils;
 
 import android.net.Uri;
-import android.support.constraint.ConstraintLayout;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.example.android.popularmoviesstage1sumita.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,17 +20,16 @@ import java.util.Scanner;
 
 public class MoviesUtil {
 
+    public static final String TRAILER_URL = "http://www.youtube.com/watch?v=";
     private static final String TAG = MoviesUtil.class.getSimpleName();
     /**
      * Enter your API_KEY in String MOVIES_API_KEY for this Project to work
      */
     private static final String MOVIES_API_KEY =
             "";
-
     private static final String MOVIES_API_BASE_URL =
             "https://api.themoviedb.org/3/movie/";
     private static final String QUERY_PARAM = "api_key";
-
     private static final String RESULTS = "results";
     private static final String ID = "id";
     private static final String TITLE = "title";
@@ -150,7 +144,7 @@ public class MoviesUtil {
         return mDetails;
     }
 
-    public static MovieDetails convertJsonToMoviesVideos(String fullJsonMoviesData,MovieDetails movieDetails) throws JSONException {
+    private static MovieDetails convertJsonToMoviesVideos(String fullJsonMoviesData, MovieDetails movieDetails) throws JSONException {
         //Convert fullJsonMoviesData to JsonObject
         JSONObject movieDetailsJson = new JSONObject(fullJsonMoviesData);
         JSONArray movieDetailsArray = movieDetailsJson.getJSONArray(RESULTS);
@@ -165,14 +159,14 @@ public class MoviesUtil {
         return movieDetails;
     }
 
-    public static MovieDetails convertJsonToMoviesReview(String fullJsonMoviesData, MovieDetails movieDetails) throws JSONException {
+    private static MovieDetails convertJsonToMoviesReview(String fullJsonMoviesData, MovieDetails movieDetails) throws JSONException {
         //Convert fullJsonMoviesData to JsonObject
         JSONObject movieDetailsJson = new JSONObject(fullJsonMoviesData);
         JSONArray movieDetailsArray = movieDetailsJson.getJSONArray(RESULTS);
         MovieReviewsDetail[] results = new MovieReviewsDetail[movieDetailsArray.length()];
         for (int i = 0; i < movieDetailsArray.length(); i++) {
             MovieReviewsDetail mDetails = new MovieReviewsDetail();
-            mDetails.setId(movieDetailsArray.getJSONObject(i).getInt(ID));
+            mDetails.setId(movieDetailsArray.getJSONObject(i).getString(ID));
             mDetails.setAuthor(movieDetailsArray.getJSONObject(i).getString(AUTHOR));
             mDetails.setContent(movieDetailsArray.getJSONObject(i).getString(CONTENT));
             mDetails.setUrl(movieDetailsArray.getJSONObject(i).getString(REVIEW_URL));
@@ -185,22 +179,23 @@ public class MoviesUtil {
     public static MovieDetails getCompleteMovieDetails(String movieId) {
         MovieDetails movieDetails = new MovieDetails();
         URL movieURL = MoviesUtil.buildUrl(movieId);
-        //URL reviewsURL = MoviesUtil.buildUrlForReviews(movieId);
+        URL reviewsURL = MoviesUtil.buildUrlForReviews(movieId);
         URL videosURL = MoviesUtil.buildUrlForVideos(movieId);
 
-        //Log.i(TAG,"reviewsURL is:" + reviewsURL.toString());
+        Log.i(TAG, "reviewsURL is:" + reviewsURL.toString());
         Log.i(TAG,"videosURL is:" + videosURL.toString());
 
         try {
             //getResponse for movieURL and setMovieDetails for movieURL
             String movieResponse = MoviesUtil.getResponseFromHttpUrl(movieURL);
             movieDetails = MoviesUtil.convertJsonToMovieIdDetail(movieResponse);
-            //String movieReviewResponse = MoviesUtil.getResponseFromHttpUrl(reviewsURL);
-            //movieDetails = MoviesUtil.convertJsonToMoviesReview(movieReviewResponse, movieDetails);
+            String movieReviewResponse = MoviesUtil.getResponseFromHttpUrl(reviewsURL);
+            movieDetails = MoviesUtil.convertJsonToMoviesReview(movieReviewResponse, movieDetails);
+            Log.i(TAG, "MovieReview is : " + movieReviewResponse);
             String movieVideoResponse = MoviesUtil.getResponseFromHttpUrl(videosURL);
             Log.i(TAG,"movieVideoResponse is:"+ movieVideoResponse);
             movieDetails = MoviesUtil.convertJsonToMoviesVideos(movieVideoResponse,movieDetails);
-            Log.i(TAG,"MovieDetail Length");
+
         } catch (IOException | JSONException e) {
             Log.i(TAG,"Exception caught"+ e.getMessage());
             Log.e(TAG, e.getMessage());

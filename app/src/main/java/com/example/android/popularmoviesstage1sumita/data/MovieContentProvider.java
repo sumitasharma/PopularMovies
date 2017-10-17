@@ -13,24 +13,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.android.popularmoviesstage1sumita.utils.MovieDetails;
-
 import static android.content.ContentValues.TAG;
 import static com.example.android.popularmoviesstage1sumita.data.MovieContract.MovieEntry.TABLE_NAME;
 
 public class MovieContentProvider extends ContentProvider {
-    private MovieDbHelper mMovieDbHelper;
     private static final int FAVORITE_MOVIES = 100;
     private static final int MOVIE_WITH_ID = 101;
     // CDeclare a static variable for the Uri matcher that you construct
     private static final UriMatcher sUriMatcher = buildUriMatcher();
-    //MovieDetails movieDetails;
-    @Override
-    public boolean onCreate() {
-        Context context = getContext();
-        mMovieDbHelper = new MovieDbHelper(context);
-        return true;
-    }
+    private MovieDbHelper mMovieDbHelper;
+
     private static UriMatcher buildUriMatcher() {
 
         // Initialize a UriMatcher with no matches by passing in NO_MATCH to the constructor
@@ -45,6 +37,14 @@ public class MovieContentProvider extends ContentProvider {
         uriMatcher.addURI(MovieContract.AUTHORITY, MovieContract.PATH_MOVIES + "/#", MOVIE_WITH_ID);
 
         return uriMatcher;
+    }
+
+    //MovieDetails movieDetails;
+    @Override
+    public boolean onCreate() {
+        Context context = getContext();
+        mMovieDbHelper = new MovieDbHelper(context);
+        return true;
     }
 
     @Nullable

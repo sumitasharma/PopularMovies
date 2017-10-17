@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:context="com.example.android.popularmoviesstage1sumita.MoviesDetailActivity"
-        android:weightSum="1">
+        android:weightSum="1"
+        tools:context="com.example.android.popularmoviesstage1sumita.MoviesDetailActivity">
 
         <ImageView
             android:id="@+id/poster"
@@ -29,10 +29,10 @@
                     android:id="@+id/favorite_movie"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/save_as_favorite"
-                    android:visibility="visible"
+                    android:layout_margin="5dp"
                     android:onClick="saveAsFavorite"
-                    android:layout_margin="5dp"/>
+                    android:text="@string/save_as_favorite"
+                    android:visibility="visible"/>
 
                 <LinearLayout
                 android:layout_width="wrap_content"
@@ -93,11 +93,10 @@
                     android:textSize="15sp"/>
 
                 <Button
+                    android:id="@+id/peoplereview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/peoplereview"
-                    android:text="Reviews"
-                    android:onClick="peopleReview"/>
+                    android:text="@string/reviews"/>
 
             </LinearLayout>
 

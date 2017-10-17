@@ -6,13 +6,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.Toast;
 
-
 import com.example.android.popularmoviesstage1sumita.data.MovieContract;
-
-import static android.content.ContentValues.TAG;
 
 
 
@@ -21,22 +17,16 @@ import static android.content.ContentValues.TAG;
 public class FetchFavoriteMovies extends AsyncTaskLoader<String> {
     private final  Context mContext;
     private final MovieDetails[] mMovieDetails;
-
-    public interface AsyncResponse {
-        void processFinishFavorite(MovieDetails[] movieDetails,Cursor cursor);
-    }
-
     private final AsyncResponse mDelegate;
 
     public FetchFavoriteMovies(Context context, RecyclerView recyclerView, MovieDetails[] movieDetails, MoviesAdapter.MoviesClickListener listener, AsyncResponse asyncResponse) {
         super(context);
-        RecyclerView mMoviesRecyclerView = recyclerView;
+        // RecyclerView mMoviesRecyclerView = recyclerView;
         this.mContext = context;
         this.mMovieDetails = movieDetails;
-        MoviesAdapter.MoviesClickListener mClickPositionListener = listener;
+        //  MoviesAdapter.MoviesClickListener mClickPositionListener = listener;
         this.mDelegate = asyncResponse;
     }
-
 
     @Override
     protected void onStartLoading() {
@@ -57,7 +47,6 @@ public class FetchFavoriteMovies extends AsyncTaskLoader<String> {
         return null;
     }
 
-
     private void onPostExecuteLoading(Cursor cursor) {
         Cursor mCursor;
         if (cursor != null) {
@@ -67,5 +56,10 @@ public class FetchFavoriteMovies extends AsyncTaskLoader<String> {
         } else {
             Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
         }
+    }
+
+
+    public interface AsyncResponse {
+        void processFinishFavorite(MovieDetails[] movieDetails, Cursor cursor);
     }
 }

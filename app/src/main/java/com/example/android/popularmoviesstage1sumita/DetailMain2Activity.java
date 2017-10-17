@@ -1,26 +1,22 @@
 package com.example.android.popularmoviesstage1sumita;
 
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.android.popularmoviesstage1sumita.data.MovieContract;
@@ -30,16 +26,12 @@ import com.example.android.popularmoviesstage1sumita.utils.MovieVideosDetail;
 import com.example.android.popularmoviesstage1sumita.utils.MoviesUtil;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
+import static com.example.android.popularmoviesstage1sumita.utils.MoviesUtil.TRAILER_URL;
 
-import java.io.IOException;
-import java.net.URL;
-import java.security.KeyFactorySpi;
-
-import static android.os.Build.VERSION_CODES.M;
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
-
-public class DetailMain2Activity extends AppCompatActivity{
+public class DetailMain2Activity extends AppCompatActivity {
+    private static final String WHERE_CLAUSE = "movieID = ";
+    private final String POSTER_PATH = "posterpath";
+    private final String TAG = MoviesDetailActivity.class.getSimpleName();
     private TextView movieTitle;
     private ImageView moviePoster;
     private TextView movieSynopsis;
@@ -47,10 +39,7 @@ public class DetailMain2Activity extends AppCompatActivity{
     private TextView movieReleaseDate;
     private int movieId;
     private Button saveAsFavorite;
-    private static final String WHERE_CLAUSE = "movieID = ";
     private String where_clause;
-    private final String POSTER_PATH = "posterpath";
-    private final String TAG = MoviesDetailActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +59,14 @@ public class DetailMain2Activity extends AppCompatActivity{
         //Checking the status of save as favorite movies from Content Provider
         Uri uri = MovieContract.MovieEntry.CONTENT_URI;
         where_clause = WHERE_CLAUSE + movieId + ";";
-        try {
-            mCursor = getContentResolver().query(uri, null, where_clause, null, null);
-            if (mCursor.getCount() == 0) {
-                saveAsFavorite.setText(R.string.save_as_favorite);
-            }
-            else
-                saveAsFavorite.setText(R.string.remove_from_favorite);
-            mCursor.close();
-        } catch(NullPointerException e) {
-            e.printStackTrace();
-        }
+
+        mCursor = getContentResolver().query(uri, null, where_clause, null, null);
+        if (mCursor.getCount() == 0) {
+            saveAsFavorite.setText(R.string.save_as_favorite);
+        } else
+            saveAsFavorite.setText(R.string.remove_from_favorite);
+        mCursor.close();
+
 
         // FetchMovies function is called for the Movie Details of the Movie clicked on Main Menu by passing
         // the MovieId this Activity received from onClick function.
@@ -116,7 +102,7 @@ public class DetailMain2Activity extends AppCompatActivity{
         // [Hint] Don't forget to call finish() to return to MainActivity after this insert is complete
         else if (saveAsFavorite.getText().equals(removeMovie)) {
             saveAsFavorite.setText(R.string.save_as_favorite);
-            int rowDeleted = getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,where_clause, null);
+            int rowDeleted = getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, where_clause, null);
             if (rowDeleted == 0) {
                 Log.i(TAG, "Favorite Movie not Deleted");
             }
@@ -140,7 +126,7 @@ public class DetailMain2Activity extends AppCompatActivity{
 
             //MovieUtil.getCompleteMovieDetails(param[0]);
 
-           return MoviesUtil.getCompleteMovieDetails(params[0]);
+            return MoviesUtil.getCompleteMovieDetails(params[0]);
         }
 
         /**
@@ -153,48 +139,60 @@ public class DetailMain2Activity extends AppCompatActivity{
             editor.putString(POSTER_PATH, movieDetails.getPosterPath());
             editor.apply();
             movieTitle.setText(movieDetails.getMovieTitle());
-            movieRatings.setText(movieDetails.getRating()+" / 10");
+            movieRatings.setText(movieDetails.getRating() + " / 10");
             movieReleaseDate.setText(movieDetails.getReleaseDate());
             movieSynopsis.setText(movieDetails.getSynopsis());
             Picasso.with(mContext).load(movieDetails.getPosterPath()).into(moviePoster);
-            //MovieVideosDetail[] movieVideosDetail = movieDetails.getMovieVideosDetail();
 
-            MovieVideosDetail[] movieVideosDetail = movieDetails.getMovieVideosDetail();
-            Log.i(TAG,"movieVideosDetail Length" + movieVideosDetail.length);
-
-            ConstraintLayout trailerConstraintLayout = (ConstraintLayout) findViewById (R.id.detail_movie_layout);
-            ConstraintSet set = new ConstraintSet();
-
-            ScrollView videoScrollView = new ScrollView(mContext);
-            LinearLayout linearLayout = new LinearLayout(mContext);
-            linearLayout.setOrientation(LinearLayout.VERTICAL);
-            videoScrollView.addView(linearLayout);
-            trailerConstraintLayout.addView(videoScrollView);
-
-            for (int i=0 ; i<movieVideosDetail.length; i++){
+            // Display the Trailers for the Movie
+            final MovieVideosDetail[] movieVideosDetail = movieDetails.getMovieVideosDetail();
+            Log.i(TAG, "movieVideosDetail Length" + movieVideosDetail.length);
+            GridLayout videoGridLayout = (GridLayout) findViewById(R.id.movie_video);
+            for (int i = 0; i < movieVideosDetail.length; i++) {
                 ImageView img = new ImageView(mContext);
                 Picasso.with(mContext).load(movieVideosDetail[i].getThumbnailUrl()).into(img);
-                Log.i(TAG,"Thumbnail is : "+movieVideosDetail[i].getThumbnailUrl());
-                linearLayout.addView(img);
-                set.clone(trailerConstraintLayout);
-                set.connect(linearLayout.getId(),ConstraintSet.TOP,R.id.trailer_title,ConstraintSet.BOTTOM);
-                set.applyTo(trailerConstraintLayout);
-
+                final String movieUrl = movieVideosDetail[i].getTrailerUrl();
+                img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent videoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(movieUrl));
+                        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                                Uri.parse(TRAILER_URL + movieUrl));
+                        try {
+                            mContext.startActivity(videoIntent);
+                        } catch (ActivityNotFoundException ex) {
+                            mContext.startActivity(webIntent);
+                        }
+                    }
+                });
+                Log.i(TAG, "Thumbnail is : " + movieVideosDetail[i].getThumbnailUrl());
+                videoGridLayout.addView(img);
             }
 
-
+            // Display the Reviews for the Movie
             MovieReviewsDetail[] movieReviewsDetails = movieDetails.getMovieReviewsDetail();
-            for (int j=0;j<movieReviewsDetails.length;j++){
+            LinearLayout reviewLinearLayout = (LinearLayout) findViewById(R.id.movie_review);
+            Log.i(TAG, "movie review length is : " + movieReviewsDetails.length);
+            for (int j = 0; j < movieReviewsDetails.length; j++) {
+                Log.i(TAG, "movie review length is : " + movieReviewsDetails.length);
+
                 TextView authorTitle = new TextView(mContext);
-                authorTitle.setText("Author : ");
+                authorTitle.setTypeface(null, Typeface.BOLD_ITALIC);
+                authorTitle.setText(R.string.author_title);
+                reviewLinearLayout.addView(authorTitle);
                 TextView author = new TextView(mContext);
                 author.setText(movieReviewsDetails[j].getAuthor());
+                reviewLinearLayout.addView(author);
                 TextView commentTitle = new TextView(mContext);
-                commentTitle.setText("Comment : ");
+                commentTitle.setTypeface(null, Typeface.BOLD_ITALIC);
+                commentTitle.setText(R.string.comments);
+                reviewLinearLayout.addView(commentTitle);
                 TextView comment = new TextView(mContext);
                 comment.setText(movieReviewsDetails[j].getContent());
+                reviewLinearLayout.addView(comment);
 
             }
+
         }
     }
 

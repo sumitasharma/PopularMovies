@@ -13,4 +13,8 @@
     <string name="save_as_favorite">Save As Favorite</string>
     <string name="remove_from_favorite">Remove From Favorite</string>
     <string name="my_favorite_movies">My Favorite Movies</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+    <string name="author_title">Author : </string>
+    <string name="comments">Comment : </string>
 </resources>
