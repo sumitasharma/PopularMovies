@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DetailMain2Activity"
+            android:name=".DetailMainActivity"
             android:label="@string/screen_label_detail">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

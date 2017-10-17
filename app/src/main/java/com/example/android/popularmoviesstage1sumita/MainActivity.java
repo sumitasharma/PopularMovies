@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
 import com.example.android.popularmoviesstage1sumita.utils.FavoriteMoviesAdapter;
 import com.example.android.popularmoviesstage1sumita.utils.FavoriteMoviesAdapter.FavoriteMoviesClickListener;
 import com.example.android.popularmoviesstage1sumita.utils.FetchFavoriteMovies;
@@ -22,12 +23,12 @@ import com.example.android.popularmoviesstage1sumita.utils.MoviesAdapter;
 
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesClickListener,FetchMovies.AsyncResponse,FetchFavoriteMovies.AsyncResponse,LoaderManager.LoaderCallbacks, FavoriteMoviesClickListener {
+    private static final int MOVIE_SEARCH_LOADER = 10;
     private final String POPULARITY = "popular";
     private final String TAG = MainActivity.class.getSimpleName();
     private Cursor mCursor;
     private RecyclerView mMoviesRecyclerView;
     private MovieDetails[] mMovieDetails = null;
-    private static final int MOVIE_SEARCH_LOADER = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     @Override
     public void onClickMovie(int moviePosition) {
-        Intent intent = new Intent(this,DetailMain2Activity.class);
+        Intent intent = new Intent(this, DetailMainActivity.class);
         intent.putExtra("MovieId", mMovieDetails[moviePosition].getId());
         startActivity(intent);
     }

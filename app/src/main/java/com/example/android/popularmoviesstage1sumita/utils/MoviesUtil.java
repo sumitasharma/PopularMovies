@@ -21,6 +21,9 @@ import java.util.Scanner;
 public class MoviesUtil {
 
     public static final String TRAILER_URL = "http://www.youtube.com/watch?v=";
+    static final String VIDEOURLPREFIX = "https://www.youtube.com/watch?v=";
+    static final String VIDEOTHUMBNAILPREFIX = "https://i.ytimg.com/vi/";
+    static final String VIDEOTHUMBNAILPOSTFIX = "/hqdefault.jpg";
     private static final String TAG = MoviesUtil.class.getSimpleName();
     /**
      * Enter your API_KEY in String MOVIES_API_KEY for this Project to work
@@ -182,18 +185,13 @@ public class MoviesUtil {
         URL reviewsURL = MoviesUtil.buildUrlForReviews(movieId);
         URL videosURL = MoviesUtil.buildUrlForVideos(movieId);
 
-        Log.i(TAG, "reviewsURL is:" + reviewsURL.toString());
-        Log.i(TAG,"videosURL is:" + videosURL.toString());
-
         try {
             //getResponse for movieURL and setMovieDetails for movieURL
             String movieResponse = MoviesUtil.getResponseFromHttpUrl(movieURL);
             movieDetails = MoviesUtil.convertJsonToMovieIdDetail(movieResponse);
             String movieReviewResponse = MoviesUtil.getResponseFromHttpUrl(reviewsURL);
             movieDetails = MoviesUtil.convertJsonToMoviesReview(movieReviewResponse, movieDetails);
-            Log.i(TAG, "MovieReview is : " + movieReviewResponse);
             String movieVideoResponse = MoviesUtil.getResponseFromHttpUrl(videosURL);
-            Log.i(TAG,"movieVideoResponse is:"+ movieVideoResponse);
             movieDetails = MoviesUtil.convertJsonToMoviesVideos(movieVideoResponse,movieDetails);
 
         } catch (IOException | JSONException e) {

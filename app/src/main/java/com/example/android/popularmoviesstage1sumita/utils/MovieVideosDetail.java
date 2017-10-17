@@ -8,17 +8,13 @@ public class MovieVideosDetail {
     private String ID;
     private String key;
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public String getKey() {
+
+        return key;
     }
 
     public void setKey(String key) {
         this.key = key;
-    }
-
-    public String getKey() {
-
-        return key;
     }
 
     public String getID() {
@@ -26,11 +22,15 @@ public class MovieVideosDetail {
         return ID;
     }
 
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
     public String getTrailerUrl(){
-        return "https://www.youtube.com/watch?v="+ this.key ;
+        return MoviesUtil.VIDEOURLPREFIX + this.key;
     }
 
     public String getThumbnailUrl(){
-        return "https://i.ytimg.com/vi/"+ this.key+"/hqdefault.jpg" ;
+        return MoviesUtil.VIDEOTHUMBNAILPREFIX + this.key + MoviesUtil.VIDEOTHUMBNAILPOSTFIX;
     }
 }

@@ -12,9 +12,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,10 +29,10 @@ import com.squareup.picasso.Picasso;
 
 import static com.example.android.popularmoviesstage1sumita.utils.MoviesUtil.TRAILER_URL;
 
-public class DetailMain2Activity extends AppCompatActivity {
+public class DetailMainActivity extends AppCompatActivity {
     private static final String WHERE_CLAUSE = "movieID = ";
     private final String POSTER_PATH = "posterpath";
-    private final String TAG = MoviesDetailActivity.class.getSimpleName();
+    private final String TAG = DetailMainActivity.class.getSimpleName();
     private TextView movieTitle;
     private ImageView moviePoster;
     private TextView movieSynopsis;
@@ -44,12 +45,12 @@ public class DetailMain2Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_main2);
+        setContentView(R.layout.activity_detail_main);
         Cursor mCursor;
 
         //Bundle extras = getIntent().getExtras();
         movieId = getIntent().getIntExtra("MovieId", 0);
-        setContentView(R.layout.activity_detail_main2);
+        setContentView(R.layout.activity_detail_main);
         movieTitle = (TextView) findViewById(R.id.title);
         moviePoster = (ImageView) findViewById(R.id.poster);
         movieSynopsis = (TextView) findViewById(R.id.synopsis);
@@ -146,11 +147,12 @@ public class DetailMain2Activity extends AppCompatActivity {
 
             // Display the Trailers for the Movie
             final MovieVideosDetail[] movieVideosDetail = movieDetails.getMovieVideosDetail();
-            Log.i(TAG, "movieVideosDetail Length" + movieVideosDetail.length);
-            GridLayout videoGridLayout = (GridLayout) findViewById(R.id.movie_video);
+            LinearLayout videoLinearLayout = (LinearLayout) findViewById(R.id.movie_video);
             for (int i = 0; i < movieVideosDetail.length; i++) {
                 ImageView img = new ImageView(mContext);
                 Picasso.with(mContext).load(movieVideosDetail[i].getThumbnailUrl()).into(img);
+                img.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                img.setPadding(20, 20, 20, 20);
                 final String movieUrl = movieVideosDetail[i].getTrailerUrl();
                 img.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -166,29 +168,38 @@ public class DetailMain2Activity extends AppCompatActivity {
                     }
                 });
                 Log.i(TAG, "Thumbnail is : " + movieVideosDetail[i].getThumbnailUrl());
-                videoGridLayout.addView(img);
+                videoLinearLayout.addView(img);
             }
 
             // Display the Reviews for the Movie
             MovieReviewsDetail[] movieReviewsDetails = movieDetails.getMovieReviewsDetail();
             LinearLayout reviewLinearLayout = (LinearLayout) findViewById(R.id.movie_review);
-            Log.i(TAG, "movie review length is : " + movieReviewsDetails.length);
             for (int j = 0; j < movieReviewsDetails.length; j++) {
-                Log.i(TAG, "movie review length is : " + movieReviewsDetails.length);
-
                 TextView authorTitle = new TextView(mContext);
                 authorTitle.setTypeface(null, Typeface.BOLD_ITALIC);
                 authorTitle.setText(R.string.author_title);
+                authorTitle.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                authorTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                authorTitle.setPadding(20, 20, 20, 10);
                 reviewLinearLayout.addView(authorTitle);
                 TextView author = new TextView(mContext);
+                author.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                author.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                author.setPadding(20, 10, 20, 10);
                 author.setText(movieReviewsDetails[j].getAuthor());
                 reviewLinearLayout.addView(author);
                 TextView commentTitle = new TextView(mContext);
+                commentTitle.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 commentTitle.setTypeface(null, Typeface.BOLD_ITALIC);
+                commentTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                commentTitle.setPadding(20, 20, 20, 10);
                 commentTitle.setText(R.string.comments);
                 reviewLinearLayout.addView(commentTitle);
                 TextView comment = new TextView(mContext);
+                comment.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 comment.setText(movieReviewsDetails[j].getContent());
+                comment.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                comment.setPadding(20, 10, 20, 100);
                 reviewLinearLayout.addView(comment);
 
             }
