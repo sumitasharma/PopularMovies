@@ -3,6 +3,8 @@ package com.example.android.popularmoviesstage1sumita.utils;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.widget.RecyclerView;
@@ -11,11 +13,8 @@ import android.widget.Toast;
 import com.example.android.popularmoviesstage1sumita.data.MovieContract;
 
 
-
-
-
 public class FetchFavoriteMovies extends AsyncTaskLoader<String> {
-    private final  Context mContext;
+    private final Context mContext;
     private final MovieDetails[] mMovieDetails;
     private final AsyncResponse mDelegate;
 
@@ -28,6 +27,18 @@ public class FetchFavoriteMovies extends AsyncTaskLoader<String> {
         this.mDelegate = asyncResponse;
     }
 
+    /**
+     * Checks Internet Connectivity
+     *
+     * @return true if the Internet Connection is available, false otherwise.
+     */
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
@@ -37,13 +48,10 @@ public class FetchFavoriteMovies extends AsyncTaskLoader<String> {
     @Override
     public String loadInBackground() {
         Uri uri = MovieContract.MovieEntry.CONTENT_URI;
-        try {
-            Cursor cursor = mContext.getContentResolver().query(uri,null,null,null,null);
-            onPostExecuteLoading(cursor);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return null;
-        }
+
+        Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, null);
+        onPostExecuteLoading(cursor);
+
         return null;
     }
 
@@ -51,7 +59,7 @@ public class FetchFavoriteMovies extends AsyncTaskLoader<String> {
         Cursor mCursor;
         if (cursor != null) {
             mCursor = cursor;
-           mDelegate.processFinishFavorite(mMovieDetails,mCursor);
+            mDelegate.processFinishFavorite(mMovieDetails, mCursor);
 
         } else {
             Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();

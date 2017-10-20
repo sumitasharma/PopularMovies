@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.android.popularmoviesstage1sumita.utils.FavoriteMoviesAdapter;
 import com.example.android.popularmoviesstage1sumita.utils.FavoriteMoviesAdapter.FavoriteMoviesClickListener;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private static final int MOVIE_SEARCH_LOADER = 10;
     private final String POPULARITY = "popular";
     private final String TAG = MainActivity.class.getSimpleName();
+    LoaderManager.LoaderCallbacks<String[]> callback = MainActivity.this;
     private Cursor mCursor;
     private RecyclerView mMoviesRecyclerView;
     private MovieDetails[] mMovieDetails = null;
@@ -45,6 +47,15 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
        // initializeLoader();
     }
 
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        //When BACK BUTTON is pressed, refreshing the
+
+        this.setTitle("My Favorites Movies");
+        getSupportLoaderManager().restartLoader(MOVIE_SEARCH_LOADER, null, callback);
+    }
+
     private void initializeLoader(){
         int loaderId = MOVIE_SEARCH_LOADER;
 
@@ -54,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
          * to the call to initLoader below. This means that whenever the loaderManager has
          * something to notify us of, it will do so through this callback.
          */
-        LoaderManager.LoaderCallbacks<String[]> callback = MainActivity.this;
+        //LoaderManager.LoaderCallbacks<String[]> callback = MainActivity.this;
 
         /*
          * The second parameter of the initLoader method below is a Bundle. Optionally, you can
@@ -105,11 +116,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 new FetchMovies(this,mMoviesRecyclerView,mMovieDetails,this,this).execute(POPULARITY);
                 break;
             case R.id.rating:
-                this.setTitle("Sort by Ratings");
+                this.setTitle("Best Ratings");
                 new FetchMovies(this,mMoviesRecyclerView,mMovieDetails,this,this).execute(RATINGS);
                 break;
             case R.id.favorite_movies:
-                this.setTitle("My Favorites");
+                this.setTitle("My Favorites Movies");
                 initializeLoader();
                 break;
         }
@@ -133,22 +144,28 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         this.mMovieDetails=movieDetails;
     }
     public void processFinishFavorite(MovieDetails[] movieDetails,Cursor cursor ) {
+
         this.mMovieDetails=movieDetails;
         this.mCursor=cursor;
     }
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        Log.i(TAG,"Inside onCreateLoader");
         return new FetchFavoriteMovies(this,mMoviesRecyclerView,mMovieDetails,this,this);
 
     }
 
     @Override
     public void onLoadFinished(Loader loader, Object data) {
-        FavoriteMoviesAdapter favoriteMoviesAdapter = new FavoriteMoviesAdapter(mMovieDetails, this,this,mCursor);
+        if (mCursor == null) {
+            Toast.makeText(this, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
+            Log.i(TAG, "Creating Toast");
+        } else {
+            Log.i(TAG, "mCurson not null");
+            FavoriteMoviesAdapter favoriteMoviesAdapter = new FavoriteMoviesAdapter(mMovieDetails, this, this, mCursor);
                 /* Setting the adapter in onPostExecute so the Movies Detail array isn't empty */
-        mMoviesRecyclerView.setAdapter(favoriteMoviesAdapter);
+            mMoviesRecyclerView.setAdapter(favoriteMoviesAdapter);
+        }
 
 
     }

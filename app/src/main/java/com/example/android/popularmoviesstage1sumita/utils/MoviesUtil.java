@@ -29,7 +29,7 @@ public class MoviesUtil {
      * Enter your API_KEY in String MOVIES_API_KEY for this Project to work
      */
     private static final String MOVIES_API_KEY =
-            "";
+            "0410de707841b1a4309f0c6aae6e5d4e";
     private static final String MOVIES_API_BASE_URL =
             "https://api.themoviedb.org/3/movie/";
     private static final String QUERY_PARAM = "api_key";

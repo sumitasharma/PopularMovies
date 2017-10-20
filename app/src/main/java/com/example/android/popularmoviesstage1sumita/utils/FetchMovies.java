@@ -19,15 +19,9 @@ public class FetchMovies extends AsyncTask<String, Void, MovieDetails[]> {
 
     private final Context mContext;
     private final RecyclerView mMoviesRecyclerView;
-    private MovieDetails[] mMovieDetails;
     private final MoviesAdapter.MoviesClickListener mClickPositionListener;
-
-
-    public interface AsyncResponse {
-        void processFinish(MovieDetails[] movieDetails);
-    }
-
     private final AsyncResponse mDelegate;
+    private MovieDetails[] mMovieDetails;
 
     public FetchMovies(Context context, RecyclerView recyclerView,MovieDetails[] movieDetails, MoviesAdapter.MoviesClickListener listener, AsyncResponse asyncResponse) {
         this.mContext = context;
@@ -56,6 +50,7 @@ public class FetchMovies extends AsyncTask<String, Void, MovieDetails[]> {
         }
         URL movieURL = MoviesUtil.buildUrl(params[0]);
         try {
+            Log.i(TAG, "Fetch Movies... doInBackground");
             String movieResponse = MoviesUtil.getResponseFromHttpUrl(movieURL);
             mMovieDetails = MoviesUtil.convertJsonToMovieSortBy(movieResponse);
         } catch (IOException | JSONException e) {
@@ -71,7 +66,7 @@ public class FetchMovies extends AsyncTask<String, Void, MovieDetails[]> {
     protected void onPostExecute(MovieDetails[] movieDetails) {
         MoviesAdapter moviesAdapter;
         if (movieDetails != null) {
-
+            Log.i(TAG, "Fetch Movies.... onPostExecute");
             mMovieDetails = movieDetails;
             moviesAdapter = new MoviesAdapter(movieDetails,this.mContext,mClickPositionListener);
                 /* Setting the adapter in onPostExecute so the Movies Detail array isn't empty */
@@ -82,5 +77,9 @@ public class FetchMovies extends AsyncTask<String, Void, MovieDetails[]> {
             Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
             Log.i(TAG, "Post Execute Function. movie details null");
         }
+    }
+
+    public interface AsyncResponse {
+        void processFinish(MovieDetails[] movieDetails);
     }
 }
