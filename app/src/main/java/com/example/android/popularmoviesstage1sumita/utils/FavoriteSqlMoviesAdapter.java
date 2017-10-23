@@ -3,6 +3,7 @@ package com.example.android.popularmoviesstage1sumita.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +13,13 @@ import com.example.android.popularmoviesstage1sumita.R;
 import com.example.android.popularmoviesstage1sumita.data.MovieContract;
 import com.squareup.picasso.Picasso;
 
-public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAdapter.RecyclerViewHolderFavoriteMovies> {
-    private MovieDetails[] mMovieDetails = null;
-    private final Context mContext;
-    private FavoriteMoviesClickListener mClickPositionListener = null;
-    private final Cursor mCursor;
+import static android.content.ContentValues.TAG;
 
-    /**
-     * Interface to handle clicks on viewHolder
-     */
-    public interface FavoriteMoviesClickListener {
-        void onClickMovie(int moviePosition);
-    }
+public class FavoriteSqlMoviesAdapter extends RecyclerView.Adapter<FavoriteSqlMoviesAdapter.RecyclerViewHolderFavoriteMovies> {
+    private final Context mContext;
+    private final Cursor mCursor;
+    MovieDetails[] mMovieDetails = null;
+    private FavoriteMoviesClickListener mClickPositionListener = null;
 
     /**
      * Constructor for Movie Adapter
@@ -32,7 +28,7 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
      * @param context            Context
      * @param movieClickListener clickListener
      */
-    public FavoriteMoviesAdapter(MovieDetails[] detailsOfMovies, Context context, FavoriteMoviesClickListener movieClickListener, Cursor cursor) {
+    public FavoriteSqlMoviesAdapter(MovieDetails[] detailsOfMovies, Context context, FavoriteMoviesClickListener movieClickListener, Cursor cursor) {
         this.mMovieDetails = detailsOfMovies;
         this.mContext = context;
         this.mClickPositionListener = movieClickListener;
@@ -48,6 +44,7 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
      */
     @Override
     public RecyclerViewHolderFavoriteMovies onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.i(TAG, "Inside RecyclerViewHolderFavoriteMovies");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder, parent, false);
         return new RecyclerViewHolderFavoriteMovies(view);
     }
@@ -59,19 +56,24 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
      * @param position viewPosition
      */
     @Override
-    public void onBindViewHolder(FavoriteMoviesAdapter.RecyclerViewHolderFavoriteMovies holder, int position) {
-        if (!mCursor.moveToPosition(position))
+    public void onBindViewHolder(FavoriteSqlMoviesAdapter.RecyclerViewHolderFavoriteMovies holder, int position) {
+        if (!mCursor.moveToPosition(position)) {
+            Log.i(TAG, "mCursor is null on BindHolder");
+
             return;
-        mMovieDetails[position].setId(mCursor.getInt(mCursor.getColumnIndex((MovieContract.MovieEntry.COLUMN_ID))));
-       mMovieDetails[position].setMovieTitle(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE)));
-        mMovieDetails[position].setPosterPath(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH)));
-       mMovieDetails[position].setRating(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING)));
-        mMovieDetails[position].setReleaseDate(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE)));
-        mMovieDetails[position].setSynopsis(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_SYNOPSIS)));
-        Picasso.with(mContext).load(mMovieDetails[position].getPosterPath()).into(holder.mMovieImage);
+        }
+        Log.i(TAG, "Inside onBindViewHolder" + position);
+        mCursor.moveToPosition(position);
+//            mMovieDetails[position].setId(mCursor.getInt(mCursor.getColumnIndex((MovieContract.MovieEntry.COLUMN_ID))));
+//            mMovieDetails[position].setMovieTitle(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE)));
+//            mMovieDetails[position].setPosterPath(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH)));
+//            mMovieDetails[position].setRating(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING)));
+//            mMovieDetails[position].setReleaseDate(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE)));
+//            mMovieDetails[position].setSynopsis(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_SYNOPSIS)));
+        Log.i(TAG, "onBindViewHolder posterPath is : " + mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH)));
+        Picasso.with(mContext).load(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH))).into(holder.mMovieImage);
+
     }
-
-
 
     /**
      * Function returns number of view holders Adapter needs to create
@@ -80,9 +82,19 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
      */
     @Override
     public int getItemCount() {
+        Log.i(TAG, "Movie Detail Length " + mCursor.getCount());
+        return mCursor.getCount();
 
-        return mMovieDetails.length;
     }
+
+
+    /**
+     * Interface to handle clicks on viewHolder
+     */
+    public interface FavoriteMoviesClickListener {
+        void onClickFavoriteMovie(int moviePosition);
+    }
+
     /**
      * RecyclerViewHolderMovies is the viewHolder for MovieAdapter
      */
@@ -93,6 +105,7 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
             super(itemView);
             mMovieImage = (ImageView) itemView.findViewById(R.id.action_image);
             mMovieImage.setOnClickListener(this);
+            Log.i(TAG, "RecyclerViewHolderFavoriteMovies constructor");
         }
 
         /**
@@ -103,7 +116,7 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
         @Override
         public void onClick(View v) {
             int onClickPosition = getAdapterPosition();
-            mClickPositionListener.onClickMovie(onClickPosition);
+            mClickPositionListener.onClickFavoriteMovie(onClickPosition);
         }
     }
 

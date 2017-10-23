@@ -13,12 +13,12 @@ import android.widget.Toast;
 import com.example.android.popularmoviesstage1sumita.data.MovieContract;
 
 
-public class FetchFavoriteMovies extends AsyncTaskLoader<String> {
+public class FetchSqlMoviesLoader extends AsyncTaskLoader<String> {
     private final Context mContext;
     private final MovieDetails[] mMovieDetails;
     private final AsyncResponse mDelegate;
 
-    public FetchFavoriteMovies(Context context, RecyclerView recyclerView, MovieDetails[] movieDetails, MoviesAdapter.MoviesClickListener listener, AsyncResponse asyncResponse) {
+    public FetchSqlMoviesLoader(Context context, RecyclerView recyclerView, MovieDetails[] movieDetails, MoviesAdapter.MoviesClickListener listener, AsyncResponse asyncResponse) {
         super(context);
         // RecyclerView mMoviesRecyclerView = recyclerView;
         this.mContext = context;
@@ -47,6 +47,9 @@ public class FetchFavoriteMovies extends AsyncTaskLoader<String> {
 
     @Override
     public String loadInBackground() {
+        if (!isOnline()) {
+            return null;
+        }
         Uri uri = MovieContract.MovieEntry.CONTENT_URI;
 
         Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, null);

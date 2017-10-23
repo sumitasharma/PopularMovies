@@ -10,9 +10,9 @@ public class MovieReviewsDetail {
     private String content;
     private String url;
 
-    public String getId() {
-        return id;
-    }
+//    public String getId() {
+//        return id;
+//    }
 
     public void setId(String id) {
         this.id = id;
@@ -34,9 +34,9 @@ public class MovieReviewsDetail {
         this.content = content;
     }
 
-    public String getUrl() {
-        return url;
-    }
+//    public String getUrl() {
+//        return url;
+//    }
 
     public void setUrl(String url) {
         this.url = url;

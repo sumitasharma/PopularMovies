@@ -8,19 +8,19 @@ public class MovieVideosDetail {
     private String ID;
     private String key;
 
-    public String getKey() {
-
-        return key;
-    }
+//    public String getKey() {
+//
+//        return key;
+//    }
 
     public void setKey(String key) {
         this.key = key;
     }
 
-    public String getID() {
-
-        return ID;
-    }
+//    public String getID() {
+//
+//        return ID;
+//    }
 
     public void setID(String ID) {
         this.ID = ID;

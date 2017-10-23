@@ -29,7 +29,7 @@ public class MoviesUtil {
      * Enter your API_KEY in String MOVIES_API_KEY for this Project to work
      */
     private static final String MOVIES_API_KEY =
-            "0410de707841b1a4309f0c6aae6e5d4e";
+            "";
     private static final String MOVIES_API_BASE_URL =
             "https://api.themoviedb.org/3/movie/";
     private static final String QUERY_PARAM = "api_key";
@@ -69,7 +69,7 @@ public class MoviesUtil {
         return url;
     }
 
-    public static URL buildUrlForVideos(String movieQuery) {
+    private static URL buildUrlForVideos(String movieQuery) {
         Uri builtUriForVideos = Uri.parse(MOVIES_API_BASE_URL).buildUpon()
                 .appendPath(movieQuery)
                 .appendQueryParameter(QUERY_PARAM, MOVIES_API_KEY).appendPath(PATH_VIDEOS).build();
@@ -82,7 +82,7 @@ public class MoviesUtil {
         return url;
     }
 
-    public static URL buildUrlForReviews(String movieQuery) {
+    private static URL buildUrlForReviews(String movieQuery) {
         Uri builtUriForReviews = Uri.parse(MOVIES_API_BASE_URL).buildUpon()
             .appendPath(movieQuery)
             .appendQueryParameter(QUERY_PARAM, MOVIES_API_KEY).appendPath(PATH_REVIEWS).build();
@@ -134,7 +134,7 @@ public class MoviesUtil {
     }
 
     // Convert JSON string to MovieDetails for a particular Movie - For Movie Detail View
-    public static MovieDetails convertJsonToMovieIdDetail(String fullJsonMoviesData) throws JSONException {
+    private static MovieDetails convertJsonToMovieIdDetail(String fullJsonMoviesData) throws JSONException {
         //Convert IdJsonMoviesData to JsonObject
         JSONObject movieIdDetails = new JSONObject(fullJsonMoviesData);
         MovieDetails mDetails = new MovieDetails();
@@ -184,6 +184,10 @@ public class MoviesUtil {
         URL movieURL = MoviesUtil.buildUrl(movieId);
         URL reviewsURL = MoviesUtil.buildUrlForReviews(movieId);
         URL videosURL = MoviesUtil.buildUrlForVideos(movieId);
+        Log.i(TAG, "movie URL is:" + movieURL);
+        Log.i(TAG, "reviews URL is:" + reviewsURL);
+        Log.i(TAG, "videos URL is:" + videosURL);
+
 
         try {
             //getResponse for movieURL and setMovieDetails for movieURL
@@ -195,9 +199,11 @@ public class MoviesUtil {
             movieDetails = MoviesUtil.convertJsonToMoviesVideos(movieVideoResponse,movieDetails);
 
         } catch (IOException | JSONException e) {
-            Log.i(TAG,"Exception caught"+ e.getMessage());
+            Log.i(TAG, "Exception caught in getCompleteMovieDetails" + e.getMessage());
+            e.printStackTrace();
             Log.e(TAG, e.getMessage());
         }
+
         return movieDetails;
     }
 

@@ -3,7 +3,7 @@ package com.example.android.popularmoviesstage1sumita.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,20 +15,23 @@ import java.net.URL;
 
 import static android.content.ContentValues.TAG;
 
-public class FetchMovies extends AsyncTask<String, Void, MovieDetails[]> {
+public class FetchApiMoviesLoader extends AsyncTaskLoader<String> {
 
     private final Context mContext;
-    private final RecyclerView mMoviesRecyclerView;
-    private final MoviesAdapter.MoviesClickListener mClickPositionListener;
+    //private final RecyclerView mMoviesRecyclerView;
+    //private final MoviesAdapter.MoviesClickListener mClickPositionListener;
     private final AsyncResponse mDelegate;
+    private final String mSortBy;
     private MovieDetails[] mMovieDetails;
 
-    public FetchMovies(Context context, RecyclerView recyclerView,MovieDetails[] movieDetails, MoviesAdapter.MoviesClickListener listener, AsyncResponse asyncResponse) {
+    public FetchApiMoviesLoader(Context context, RecyclerView recyclerView, MovieDetails[] movieDetails, MoviesAdapter.MoviesClickListener listener, AsyncResponse asyncResponse, String sortBy) {
+        super(context);
         this.mContext = context;
-        this.mMoviesRecyclerView = recyclerView;
+        //this.mMoviesRecyclerView = recyclerView;
         this.mMovieDetails = movieDetails;
-        this.mClickPositionListener = listener;
+        //this.mClickPositionListener = listener;
         this.mDelegate = asyncResponse;
+        this.mSortBy = sortBy;
     }
 
     /**
@@ -44,11 +47,37 @@ public class FetchMovies extends AsyncTask<String, Void, MovieDetails[]> {
     }
 
     @Override
-    protected MovieDetails[] doInBackground(String... params) {
+    protected void onStartLoading() {
+        super.onStartLoading();
+        forceLoad();
+    }
+
+
+    /**
+     * Setting all the details in the XML file
+     */
+    private void onPostExecuteLoading(MovieDetails[] movieDetails) {
+        //MoviesAdapter moviesAdapter;
+        if (movieDetails != null) {
+            Log.i(TAG, "Fetch Movies.... onPostExecute");
+            mMovieDetails = movieDetails;
+            //moviesAdapter = new MoviesAdapter(movieDetails,this.mContext,mClickPositionListener);
+                /* Setting the adapter in onPostExecuteLoading so the Movies Detail array isn't empty */
+            //mMoviesRecyclerView.setAdapter(moviesAdapter);
+            mDelegate.processFinish(mMovieDetails);
+
+        } else {
+            Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
+            Log.i(TAG, "Post Execute Function. movie details null");
+        }
+    }
+
+    @Override
+    public String loadInBackground() {
         if (!isOnline()) {
             return null;
         }
-        URL movieURL = MoviesUtil.buildUrl(params[0]);
+        URL movieURL = MoviesUtil.buildUrl(mSortBy);
         try {
             Log.i(TAG, "Fetch Movies... doInBackground");
             String movieResponse = MoviesUtil.getResponseFromHttpUrl(movieURL);
@@ -56,27 +85,8 @@ public class FetchMovies extends AsyncTask<String, Void, MovieDetails[]> {
         } catch (IOException | JSONException e) {
             Log.e(TAG, e.getMessage());
         }
-        return mMovieDetails;
-    }
-
-    /**
-     * Setting all the details in the XML file
-     */
-    @Override
-    protected void onPostExecute(MovieDetails[] movieDetails) {
-        MoviesAdapter moviesAdapter;
-        if (movieDetails != null) {
-            Log.i(TAG, "Fetch Movies.... onPostExecute");
-            mMovieDetails = movieDetails;
-            moviesAdapter = new MoviesAdapter(movieDetails,this.mContext,mClickPositionListener);
-                /* Setting the adapter in onPostExecute so the Movies Detail array isn't empty */
-            mMoviesRecyclerView.setAdapter(moviesAdapter);
-            mDelegate.processFinish(mMovieDetails);
-
-        } else {
-            Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "Post Execute Function. movie details null");
-        }
+        onPostExecuteLoading(mMovieDetails);
+        return null;
     }
 
     public interface AsyncResponse {
