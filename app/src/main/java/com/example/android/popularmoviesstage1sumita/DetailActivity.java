@@ -31,7 +31,7 @@ import com.squareup.picasso.Picasso;
 import static com.example.android.popularmoviesstage1sumita.utils.MoviesUtil.TRAILER_URL;
 
 public class DetailActivity extends SortByMoviesMenu implements LoaderManager.LoaderCallbacks, DetailMovieLoader.MovieDetailAsyncResponse {
-    private static final int MOVIE_DETAILS = 15;
+    //private static final int MOVIE_DETAILS = 15;
     private static final String WHERE_CLAUSE = "movieID = ";
     private final String POSTER_PATH = "posterpath";
     private final String TAG = DetailActivity.class.getSimpleName();
@@ -80,8 +80,14 @@ public class DetailActivity extends SortByMoviesMenu implements LoaderManager.Lo
         // FetchFavoriteMovieDetails function is called for the Movie Details of the Movie clicked on Main Menu by passing
         // the MovieId this Activity received from onClick function.
 
-        initializeLoader();
+        initializeLoader(MOVIE_DETAILS);
     }
+
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putInt(ACTIVITY_STATE, mLoaderId);
+//    }
 
     public void saveAsFavorite(View view) {
         final String saveMovie = "Save As Favorite";
@@ -122,6 +128,12 @@ public class DetailActivity extends SortByMoviesMenu implements LoaderManager.Lo
     @Override
     public Loader onCreateLoader(int i, Bundle bundle) {
         Log.i(TAG, "onCreateLoader");
+        if (mLoaderId != MOVIE_DETAILS) {
+            Log.i(TAG, "onCreate Loader of Detail Activity" + mLoaderId);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("loader", mLoaderId);
+            startActivity(intent);
+        }
         return new DetailMovieLoader(this, this, movieId);
     }
 
@@ -206,17 +218,17 @@ public class DetailActivity extends SortByMoviesMenu implements LoaderManager.Lo
 
     }
 
-    private void initializeLoader() {
+//    private void initializeLoader() {
+//
+//        LoaderManager loaderManager = getSupportLoaderManager();
+//        Loader<String> movieSearchLoader = loaderManager.getLoader(MOVIE_DETAILS);
+//        if (movieSearchLoader == null) {
+//            loaderManager.initLoader(MOVIE_DETAILS, null, callback);
+//        } else {
+//            loaderManager.restartLoader(MOVIE_DETAILS, null, callback);
+//        }
 
-        LoaderManager loaderManager = getSupportLoaderManager();
-        Loader<String> movieSearchLoader = loaderManager.getLoader(MOVIE_DETAILS);
-        if (movieSearchLoader == null) {
-            loaderManager.initLoader(MOVIE_DETAILS, null, callback);
-        } else {
-            loaderManager.restartLoader(MOVIE_DETAILS, null, callback);
-        }
-
-    }
+//    }
 
     /**
      * Setting all the details in the XML file

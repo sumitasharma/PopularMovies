@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import com.example.android.popularmoviesstage1sumita.data.MovieContract;
 
@@ -65,7 +64,8 @@ public class FetchSqlMoviesLoader extends AsyncTaskLoader<String> {
             mDelegate.processFinishFavorite(mMovieDetails, mCursor);
 
         } else {
-            Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
+//            Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
+            return;
         }
     }
 

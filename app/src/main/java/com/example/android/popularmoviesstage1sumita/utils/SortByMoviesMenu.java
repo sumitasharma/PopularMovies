@@ -18,9 +18,12 @@ public class SortByMoviesMenu extends AppCompatActivity implements LoaderManager
     public static final int FAVORITE_MOVIE_LOADER = 10;
     public static final int POPULAR_MOVIE_LOADER = 11;
     public static final int RATING_MOVIE_LOADER = 12;
+    public static final int MOVIE_DETAILS = 15;
+    public static final String ACTIVITY_STATE = "activity_state";
     public final String TAG = MainActivity.class.getSimpleName();
     private final LoaderManager.LoaderCallbacks<String[]> callback = SortByMoviesMenu.this;
     public int mLoaderId;
+
 
     public void initializeLoader(int loaderId) {
         this.mLoaderId = loaderId;
@@ -33,6 +36,12 @@ public class SortByMoviesMenu extends AppCompatActivity implements LoaderManager
             loaderManager.restartLoader(mLoaderId, null, callback);
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(ACTIVITY_STATE, this.mLoaderId);
     }
 
     @Override
@@ -51,19 +60,25 @@ public class SortByMoviesMenu extends AppCompatActivity implements LoaderManager
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Bundle queryBundle = new Bundle();
-
+        Log.i(TAG, "onOption : " + item.getItemId());
         int id = item.getItemId();
         switch (id) {
             case R.id.popularity:
                 this.setTitle(R.string.screen_label_popular);
+                this.mLoaderId = POPULAR_MOVIE_LOADER;
+                Log.i(TAG, "onOption : popular");
                 initializeLoader(POPULAR_MOVIE_LOADER);
                 break;
             case R.id.rating:
                 this.setTitle(R.string.screen_label_rating);
+                this.mLoaderId = RATING_MOVIE_LOADER;
+                Log.i(TAG, "onOption : rating");
                 initializeLoader(RATING_MOVIE_LOADER);
                 break;
             case R.id.favorite_movies:
                 this.setTitle(R.string.screen_label_favorite);
+                this.mLoaderId = FAVORITE_MOVIE_LOADER;
+                Log.i(TAG, "onOption : favorite");
                 initializeLoader(FAVORITE_MOVIE_LOADER);
                 break;
         }
