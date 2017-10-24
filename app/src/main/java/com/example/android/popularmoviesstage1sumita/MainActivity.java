@@ -1,18 +1,17 @@
 package com.example.android.popularmoviesstage1sumita;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.android.popularmoviesstage1sumita.data.MovieContract;
@@ -22,15 +21,17 @@ import com.example.android.popularmoviesstage1sumita.utils.FetchApiMoviesLoader;
 import com.example.android.popularmoviesstage1sumita.utils.FetchSqlMoviesLoader;
 import com.example.android.popularmoviesstage1sumita.utils.MovieDetails;
 import com.example.android.popularmoviesstage1sumita.utils.MoviesAdapter;
+import com.example.android.popularmoviesstage1sumita.utils.SortByMoviesMenu;
 
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesClickListener, FetchApiMoviesLoader.AsyncResponse, FetchSqlMoviesLoader.AsyncResponse, LoaderManager.LoaderCallbacks, FavoriteMoviesClickListener {
-    static final int FAVORITE_MOVIE_LOADER = 10;
-    static final int POPULAR_MOVIE_LOADER = 11;
-    static final int RATING_MOVIE_LOADER = 12;
+public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.MoviesClickListener, FetchApiMoviesLoader.AsyncResponse, FetchSqlMoviesLoader.AsyncResponse, LoaderManager.LoaderCallbacks, FavoriteMoviesClickListener {
+    //    static final int FAVORITE_MOVIE_LOADER = 10;
+//    static final int POPULAR_MOVIE_LOADER = 11;
+//    static final int RATING_MOVIE_LOADER = 12;
+    private static final String ACTIVITY_STATE = "activity_state";
+    public final String TAG = MainActivity.class.getSimpleName();
     final String POPULARITY = "popular";
     final String RATINGS = "top_rated";
-    private final String TAG = MainActivity.class.getSimpleName();
     private final LoaderManager.LoaderCallbacks<String[]> callback = MainActivity.this;
     int mLoaderId;
     private Cursor mCursor;
@@ -47,45 +48,74 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         } else {
             mMoviesRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         }
+        if (savedInstanceState != null) {
+            Log.i(TAG, "savedinstances is not null");
+            mLoaderId = savedInstanceState.getInt(ACTIVITY_STATE, FAVORITE_MOVIE_LOADER);
+            if (mLoaderId == POPULAR_MOVIE_LOADER)
+                this.setTitle(R.string.screen_label_popular);
+            else if (mLoaderId == FAVORITE_MOVIE_LOADER)
+                this.setTitle(R.string.screen_label_favorite);
+            else if (mLoaderId == RATING_MOVIE_LOADER)
+                this.setTitle(R.string.screen_label_rating);
+            else this.setTitle(R.string.screen_label_popular);
+        }
+        Log.i(TAG, "OnCreate Called");
         // initializeLoader();
-        this.setTitle(R.string.screen_label_popular);
-        initializeLoader(POPULAR_MOVIE_LOADER);
+        initializeLoader(mLoaderId);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(ACTIVITY_STATE, mLoaderId);
     }
 
     @Override
     public void onRestart() {
         super.onRestart();
         //When BACK BUTTON is pressed
-        switch (mLoaderId) {
+        switch (this.mLoaderId) {
             case POPULAR_MOVIE_LOADER:
                 this.setTitle(R.string.screen_label_popular);
+                break;
             case RATING_MOVIE_LOADER:
                 this.setTitle(R.string.screen_label_rating);
+                break;
             case FAVORITE_MOVIE_LOADER:
                 this.setTitle(R.string.screen_label_favorite);
+                break;
+            default:
+                this.setTitle(R.string.screen_label_popular);
+                break;
         }
         Log.i(TAG, "Title on restart is : " + this.getTitle());
-        getSupportLoaderManager().restartLoader(mLoaderId, null, callback);
+        getSupportLoaderManager().restartLoader(this.mLoaderId, null, callback);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         //When BACK BUTTON is pressed
-        switch (mLoaderId) {
+        switch (this.mLoaderId) {
             case POPULAR_MOVIE_LOADER:
                 this.setTitle(R.string.screen_label_popular);
+                break;
             case RATING_MOVIE_LOADER:
                 this.setTitle(R.string.screen_label_rating);
+                break;
             case FAVORITE_MOVIE_LOADER:
                 this.setTitle(R.string.screen_label_favorite);
+                break;
+            default:
+                this.setTitle(R.string.screen_label_popular);
+                break;
         }
-        Log.i(TAG, "Title on restart is : " + this.getTitle());
-        getSupportLoaderManager().restartLoader(mLoaderId, null, callback);
+        Log.i(TAG, "Title on resume is : " + this.getTitle());
+        getSupportLoaderManager().restartLoader(this.mLoaderId, null, callback);
     }
 
 
-    private void initializeLoader(int loaderId) {
+    public void initializeLoader(int loaderId) {
         this.mLoaderId = loaderId;
 
         LoaderManager loaderManager = getSupportLoaderManager();
@@ -98,41 +128,41 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
-        MenuInflater inflater = getMenuInflater();
-        /* Use the inflater's inflate method to inflate our menu layout to this menu */
-        inflater.inflate(R.menu.sortby_menu, menu);
-        /* Return true so that the menu is displayed in the Toolbar */
-        return true;
-    }
-
-    /**
-     * Function onOptionsItemSelected calls FetchApiMoviesLoader once option is selected based on Sort By
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Bundle queryBundle = new Bundle();
-
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.popularity:
-                this.setTitle(R.string.screen_label_popular);
-                initializeLoader(POPULAR_MOVIE_LOADER);
-                break;
-            case R.id.rating:
-                this.setTitle(R.string.screen_label_rating);
-                initializeLoader(RATING_MOVIE_LOADER);
-                break;
-            case R.id.favorite_movies:
-                this.setTitle(R.string.screen_label_favorite);
-                initializeLoader(FAVORITE_MOVIE_LOADER);
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
+//        MenuInflater inflater = getMenuInflater();
+//        /* Use the inflater's inflate method to inflate our menu layout to this menu */
+//        inflater.inflate(R.menu.sortby_menu, menu);
+//        /* Return true so that the menu is displayed in the Toolbar */
+//        return true;
+//    }
+//
+//    /**
+//     * Function onOptionsItemSelected calls FetchApiMoviesLoader once option is selected based on Sort By
+//     */
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Bundle queryBundle = new Bundle();
+//
+//        int id = item.getItemId();
+//        switch (id) {
+//            case R.id.popularity:
+//                this.setTitle(R.string.screen_label_popular);
+//                initializeLoader(POPULAR_MOVIE_LOADER);
+//                break;
+//            case R.id.rating:
+//                this.setTitle(R.string.screen_label_rating);
+//                initializeLoader(RATING_MOVIE_LOADER);
+//                break;
+//            case R.id.favorite_movies:
+//                this.setTitle(R.string.screen_label_favorite);
+//                initializeLoader(FAVORITE_MOVIE_LOADER);
+//                break;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     /**
      * Function calls the MovieDetailsActivity to display the details of the clicked Movie by passing MovieId
@@ -155,6 +185,17 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         startActivity(intent);
     }
 
+    /**
+     * Checks Internet Connectivity
+     *
+     * @return true if the Internet Connection is available, false otherwise.
+     */
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 
     @Override
     public void processFinish(MovieDetails[] movieDetails) {
@@ -162,6 +203,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
 
     public void processFinishFavorite(MovieDetails[] movieDetails, Cursor cursor) {
+        if (movieDetails == null && !isOnline()) {
+//            Toast.makeText(this, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
+            Log.i(TAG, "not online... loadInBackground");
+            return;
+        }
 
         this.mMovieDetails = movieDetails;
         this.mCursor = cursor;
@@ -169,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
+        Log.i(TAG, "Main Activity OnLoader Called");
         switch (id) {
             case POPULAR_MOVIE_LOADER:
                 this.setTitle(R.string.screen_label_popular);
@@ -189,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     @Override
     public void onLoadFinished(Loader loader, Object data) {
+
         switch (mLoaderId) {
             case FAVORITE_MOVIE_LOADER:
                 if (mCursor == null) {
@@ -202,11 +250,15 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 }
                 break;
             default:
+                if (!isOnline()) {
+                    Toast.makeText(this, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
+                    Log.i(TAG, "Creating Toast");
+                } else {
                 MoviesAdapter moviesAdapter;
                 moviesAdapter = new MoviesAdapter(mMovieDetails, this, this);
-                /* Setting the adapter in onPostExecuteLoading so the Movies Detail array isn't empty */
                 mMoviesRecyclerView.setAdapter(moviesAdapter);
-                break;
+                    break;
+                }
 
         }
     }

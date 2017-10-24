@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -26,11 +25,12 @@ import com.example.android.popularmoviesstage1sumita.utils.DetailMovieLoader;
 import com.example.android.popularmoviesstage1sumita.utils.MovieDetails;
 import com.example.android.popularmoviesstage1sumita.utils.MovieReviewsDetail;
 import com.example.android.popularmoviesstage1sumita.utils.MovieVideosDetail;
+import com.example.android.popularmoviesstage1sumita.utils.SortByMoviesMenu;
 import com.squareup.picasso.Picasso;
 
 import static com.example.android.popularmoviesstage1sumita.utils.MoviesUtil.TRAILER_URL;
 
-public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks, DetailMovieLoader.MovieDetailAsyncResponse {
+public class DetailActivity extends SortByMoviesMenu implements LoaderManager.LoaderCallbacks, DetailMovieLoader.MovieDetailAsyncResponse {
     private static final int MOVIE_DETAILS = 15;
     private static final String WHERE_CLAUSE = "movieID = ";
     private final String POSTER_PATH = "posterpath";

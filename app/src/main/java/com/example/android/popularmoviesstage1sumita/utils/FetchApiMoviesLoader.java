@@ -6,7 +6,6 @@ import android.net.NetworkInfo;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -32,6 +31,7 @@ public class FetchApiMoviesLoader extends AsyncTaskLoader<String> {
         //this.mClickPositionListener = listener;
         this.mDelegate = asyncResponse;
         this.mSortBy = sortBy;
+        Log.i(TAG, "Constructor called. FetchApiMoviesLoader");
     }
 
     /**
@@ -67,22 +67,23 @@ public class FetchApiMoviesLoader extends AsyncTaskLoader<String> {
             mDelegate.processFinish(mMovieDetails);
 
         } else {
-            Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
+//            Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
             Log.i(TAG, "Post Execute Function. movie details null");
         }
     }
 
     @Override
     public String loadInBackground() {
-        if (!isOnline()) {
+        if (!isOnline())
             return null;
-        }
         URL movieURL = MoviesUtil.buildUrl(mSortBy);
         try {
-            Log.i(TAG, "Fetch Movies... doInBackground");
+            Log.i(TAG, "Fetch Movies... loadInBackground");
             String movieResponse = MoviesUtil.getResponseFromHttpUrl(movieURL);
             mMovieDetails = MoviesUtil.convertJsonToMovieSortBy(movieResponse);
         } catch (IOException | JSONException e) {
+            Log.i(TAG, "Inside loadInBackground Exception");
+            e.printStackTrace();
             Log.e(TAG, e.getMessage());
         }
         onPostExecuteLoading(mMovieDetails);

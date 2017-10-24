@@ -189,6 +189,7 @@ public class MoviesUtil {
         Log.i(TAG, "videos URL is:" + videosURL);
 
 
+
         try {
             //getResponse for movieURL and setMovieDetails for movieURL
             String movieResponse = MoviesUtil.getResponseFromHttpUrl(movieURL);

@@ -14,16 +14,9 @@ import com.squareup.picasso.Picasso;
  * MoviesAdapter class extends RecyclerView.Adapter
  */
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerViewHolderMovies> {
-    private MovieDetails[] mMovieDetails = null;
     private final Context mContext;
+    private MovieDetails[] mMovieDetails = null;
     private MoviesClickListener mClickPositionListener = null;
-
-    /**
-     * Interface to handle clicks on viewHolder
-     */
-    public interface MoviesClickListener {
-        void onClickMovie(int moviePosition);
-    }
 
     /**
      * Constructor for Movie Adapter
@@ -69,9 +62,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.RecyclerVi
      */
     @Override
     public int getItemCount() {
-
         return mMovieDetails.length;
     }
+
+    /**
+     * Interface to handle clicks on viewHolder
+     */
+    public interface MoviesClickListener {
+        void onClickMovie(int moviePosition);
+    }
+
     /**
      * RecyclerViewHolderMovies is the viewHolder for MovieAdapter
      */
