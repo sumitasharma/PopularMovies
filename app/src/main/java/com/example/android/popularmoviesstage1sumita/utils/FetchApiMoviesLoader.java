@@ -58,8 +58,9 @@ public class FetchApiMoviesLoader extends AsyncTaskLoader<String> {
      */
     private void onPostExecuteLoading(MovieDetails[] movieDetails) {
         //MoviesAdapter moviesAdapter;
+        Log.i(TAG, "Post Execute Function... Fetch Movies");
         if (movieDetails != null) {
-            Log.i(TAG, "Fetch Movies.... onPostExecute");
+            Log.i(TAG, "Fetch Movies.... onPostExecute. movie not null");
             mMovieDetails = movieDetails;
             //moviesAdapter = new MoviesAdapter(movieDetails,this.mContext,mClickPositionListener);
                 /* Setting the adapter in onPostExecuteLoading so the Movies Detail array isn't empty */

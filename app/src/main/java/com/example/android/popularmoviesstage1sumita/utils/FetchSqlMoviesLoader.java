@@ -63,9 +63,6 @@ public class FetchSqlMoviesLoader extends AsyncTaskLoader<String> {
             mCursor = cursor;
             mDelegate.processFinishFavorite(mMovieDetails, mCursor);
 
-        } else {
-//            Toast.makeText(mContext, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
-            return;
         }
     }
 

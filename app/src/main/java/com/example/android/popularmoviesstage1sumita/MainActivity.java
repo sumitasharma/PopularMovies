@@ -25,15 +25,11 @@ import com.example.android.popularmoviesstage1sumita.utils.SortByMoviesMenu;
 
 
 public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.MoviesClickListener, FetchApiMoviesLoader.AsyncResponse, FetchSqlMoviesLoader.AsyncResponse, LoaderManager.LoaderCallbacks, FavoriteMoviesClickListener {
-    //    static final int FAVORITE_MOVIE_LOADER = 10;
-//    static final int POPULAR_MOVIE_LOADER = 11;
-//    static final int RATING_MOVIE_LOADER = 12;
-//    private static final String ACTIVITY_STATE = "activity_state";
-    public final String TAG = MainActivity.class.getSimpleName();
-    final String POPULARITY = "popular";
-    final String RATINGS = "top_rated";
+    private final String TAG = MainActivity.class.getSimpleName();
+    private final String POPULARITY = "popular";
+    private final String RATINGS = "top_rated";
     private final LoaderManager.LoaderCallbacks<String[]> callback = MainActivity.this;
-    int mLoaderId;
+    private int mLoaderId;
     private Cursor mCursor;
     private RecyclerView mMoviesRecyclerView;
     private MovieDetails[] mMovieDetails = null;
@@ -50,7 +46,6 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
         }
         if (savedInstanceState != null) {
             this.mLoaderId = savedInstanceState.getInt(ACTIVITY_STATE, POPULAR_MOVIE_LOADER);
-            Log.i(TAG, "savedinstances is not null " + mLoaderId);
             if (mLoaderId == POPULAR_MOVIE_LOADER)
                 this.setTitle(R.string.screen_label_popular);
             else if (mLoaderId == FAVORITE_MOVIE_LOADER)
@@ -61,16 +56,10 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
                 this.setTitle(R.string.screen_label_popular);
             }
         }
-        Log.i(TAG, "Title OnCreate :" + getTitle());
         // initializeLoader();
         initializeLoader(mLoaderId);
     }
 
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putInt(ACTIVITY_STATE, mLoaderId);
-//    }
 
     @Override
     public void onRestart() {
@@ -78,93 +67,45 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
         //When BACK BUTTON is pressed
         switch (this.mLoaderId) {
             case POPULAR_MOVIE_LOADER:
+                mLoaderId = POPULAR_MOVIE_LOADER;
                 this.setTitle(R.string.screen_label_popular);
                 break;
             case RATING_MOVIE_LOADER:
+                mLoaderId = RATING_MOVIE_LOADER;
                 this.setTitle(R.string.screen_label_rating);
                 break;
             case FAVORITE_MOVIE_LOADER:
+                mLoaderId = FAVORITE_MOVIE_LOADER;
                 this.setTitle(R.string.screen_label_favorite);
                 break;
             default:
                 this.setTitle(R.string.screen_label_popular);
                 break;
         }
-        Log.i(TAG, "Title on restart is : " + this.getTitle());
         getSupportLoaderManager().restartLoader(this.mLoaderId, null, callback);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mLoaderId = savedInstanceState.getInt(ACTIVITY_STATE);
+        Log.i(TAG, "savedInstanceState onRestoreInstanceState : " + mLoaderId);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //When BACK BUTTON is pressed
-        switch (this.mLoaderId) {
-            case POPULAR_MOVIE_LOADER:
-                this.setTitle(R.string.screen_label_popular);
-                mLoaderId = POPULAR_MOVIE_LOADER;
-                break;
-            case RATING_MOVIE_LOADER:
-                this.setTitle(R.string.screen_label_rating);
-                mLoaderId = RATING_MOVIE_LOADER;
-                break;
-            case FAVORITE_MOVIE_LOADER:
-                this.setTitle(R.string.screen_label_favorite);
-                mLoaderId = FAVORITE_MOVIE_LOADER;
-                break;
-            default:
-                this.setTitle(R.string.screen_label_popular);
-                break;
-        }
-        Log.i(TAG, "Title on resume is : " + this.getTitle());
+        Log.i(TAG, "Title on resume is : " + this.getTitle() + mLoaderId);
         getSupportLoaderManager().restartLoader(this.mLoaderId, null, callback);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //When BACK BUTTON is pressed
-        switch (this.mLoaderId) {
-            case POPULAR_MOVIE_LOADER:
-                this.setTitle(R.string.screen_label_popular);
-                mLoaderId = POPULAR_MOVIE_LOADER;
-                break;
-            case RATING_MOVIE_LOADER:
-                this.setTitle(R.string.screen_label_rating);
-                mLoaderId = RATING_MOVIE_LOADER;
-                break;
-            case FAVORITE_MOVIE_LOADER:
-                this.setTitle(R.string.screen_label_favorite);
-                mLoaderId = FAVORITE_MOVIE_LOADER;
-                break;
-            default:
-                this.setTitle(R.string.screen_label_popular);
-                break;
-        }
-        Log.i(TAG, "Title on start  is : " + this.getTitle());
-        getSupportLoaderManager().restartLoader(this.mLoaderId, null, callback);
-    }
 
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        switch (this.mLoaderId) {
-            case POPULAR_MOVIE_LOADER:
-                this.setTitle(R.string.screen_label_popular);
-                break;
-            case RATING_MOVIE_LOADER:
-                this.setTitle(R.string.screen_label_rating);
-                break;
-            case FAVORITE_MOVIE_LOADER:
-                this.setTitle(R.string.screen_label_favorite);
-                break;
-            default:
-                this.setTitle(R.string.screen_label_popular);
-                break;
-        }
-        Log.i(TAG, "Title on saveinstance is : " + this.getTitle());
-        getSupportLoaderManager().restartLoader(this.mLoaderId, null, callback);
+        outState.putInt(ACTIVITY_STATE, this.mLoaderId);
     }
 
     public void initializeLoader(int loaderId) {
@@ -179,42 +120,6 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
         }
 
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
-//        MenuInflater inflater = getMenuInflater();
-//        /* Use the inflater's inflate method to inflate our menu layout to this menu */
-//        inflater.inflate(R.menu.sortby_menu, menu);
-//        /* Return true so that the menu is displayed in the Toolbar */
-//        return true;
-//    }
-//
-//    /**
-//     * Function onOptionsItemSelected calls FetchApiMoviesLoader once option is selected based on Sort By
-//     */
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Bundle queryBundle = new Bundle();
-//
-//        int id = item.getItemId();
-//        switch (id) {
-//            case R.id.popularity:
-//                this.setTitle(R.string.screen_label_popular);
-//                initializeLoader(POPULAR_MOVIE_LOADER);
-//                break;
-//            case R.id.rating:
-//                this.setTitle(R.string.screen_label_rating);
-//                initializeLoader(RATING_MOVIE_LOADER);
-//                break;
-//            case R.id.favorite_movies:
-//                this.setTitle(R.string.screen_label_favorite);
-//                initializeLoader(FAVORITE_MOVIE_LOADER);
-//                break;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     /**
      * Function calls the MovieDetailsActivity to display the details of the clicked Movie by passing MovieId
@@ -256,7 +161,7 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
 
     public void processFinishFavorite(MovieDetails[] movieDetails, Cursor cursor) {
         if (movieDetails == null && !isOnline()) {
-//            Toast.makeText(this, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
+
             Log.i(TAG, "not online... loadInBackground");
             return;
         }
@@ -267,25 +172,25 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
+        super.onCreateLoader(mLoaderId, args);
         checkIntent();
-        Log.i(TAG, "Main Activity OnLoader Called" + mLoaderId);
-        switch (id) {
-            case POPULAR_MOVIE_LOADER:
+        if (id == POPULAR_MOVIE_LOADER) {
                 this.setTitle(R.string.screen_label_popular);
-                return new FetchApiMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this, POPULARITY);
-            case RATING_MOVIE_LOADER:
+            return new FetchApiMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this, POPULARITY);
+        } else if (id == RATING_MOVIE_LOADER) {
                 this.setTitle(R.string.screen_label_rating);
-                return new FetchApiMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this, RATINGS);
-            case FAVORITE_MOVIE_LOADER:
+            return new FetchApiMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this, RATINGS);
+        } else if (id == FAVORITE_MOVIE_LOADER) {
                 this.setTitle(R.string.screen_label_favorite);
-                return new FetchSqlMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this);
-            default:
-                Log.i(TAG, "onCreateLoader default is called" + mLoaderId);
-                this.setTitle(R.string.screen_label_popular);
-                return new FetchApiMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this, POPULARITY);
+            return new FetchSqlMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this);
+        } else {
+            Log.i(TAG, "onCreateLoader default is called" + mLoaderId);
+            this.setTitle(R.string.screen_label_popular);
+            return new FetchApiMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this, POPULARITY);
         }
 
-    }
+        }
+
 
     @Override
     public void onLoadFinished(Loader loader, Object data) {
@@ -316,7 +221,7 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
         }
     }
 
-    public void checkIntent() {
+    private void checkIntent() {
         Intent intent = getIntent();
         if (intent != null) {
             this.mLoaderId = intent.getIntExtra("loader", mLoaderId);

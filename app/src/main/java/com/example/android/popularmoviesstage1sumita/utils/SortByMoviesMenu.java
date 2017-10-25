@@ -15,19 +15,18 @@ import com.example.android.popularmoviesstage1sumita.R;
 
 public class SortByMoviesMenu extends AppCompatActivity implements LoaderManager.LoaderCallbacks {
 
-    public static final int FAVORITE_MOVIE_LOADER = 10;
-    public static final int POPULAR_MOVIE_LOADER = 11;
-    public static final int RATING_MOVIE_LOADER = 12;
-    public static final int MOVIE_DETAILS = 15;
-    public static final String ACTIVITY_STATE = "activity_state";
-    public final String TAG = MainActivity.class.getSimpleName();
+    protected static final int FAVORITE_MOVIE_LOADER = 10;
+    protected static final int POPULAR_MOVIE_LOADER = 11;
+    protected static final int RATING_MOVIE_LOADER = 12;
+    protected static final int MOVIE_DETAILS = 15;
+    protected static final String ACTIVITY_STATE = "activity_state";
+    private final String TAG = MainActivity.class.getSimpleName();
     private final LoaderManager.LoaderCallbacks<String[]> callback = SortByMoviesMenu.this;
-    public int mLoaderId;
+    protected int mLoaderId;
 
 
-    public void initializeLoader(int loaderId) {
+    protected void initializeLoader(int loaderId) {
         this.mLoaderId = loaderId;
-        Log.i(TAG, "The loader id is : " + mLoaderId);
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String> movieSearchLoader = loaderManager.getLoader(mLoaderId);
         if (movieSearchLoader == null) {
@@ -39,10 +38,21 @@ public class SortByMoviesMenu extends AppCompatActivity implements LoaderManager
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ACTIVITY_STATE, this.mLoaderId);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,7 +70,6 @@ public class SortByMoviesMenu extends AppCompatActivity implements LoaderManager
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Bundle queryBundle = new Bundle();
-        Log.i(TAG, "onOption : " + item.getItemId());
         int id = item.getItemId();
         switch (id) {
             case R.id.popularity:
@@ -88,6 +97,7 @@ public class SortByMoviesMenu extends AppCompatActivity implements LoaderManager
 
     @Override
     public Loader onCreateLoader(int i, Bundle bundle) {
+        this.mLoaderId = i;
         return null;
     }
 

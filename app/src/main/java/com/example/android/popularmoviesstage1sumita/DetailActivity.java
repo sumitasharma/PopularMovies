@@ -31,7 +31,6 @@ import com.squareup.picasso.Picasso;
 import static com.example.android.popularmoviesstage1sumita.utils.MoviesUtil.TRAILER_URL;
 
 public class DetailActivity extends SortByMoviesMenu implements LoaderManager.LoaderCallbacks, DetailMovieLoader.MovieDetailAsyncResponse {
-    //private static final int MOVIE_DETAILS = 15;
     private static final String WHERE_CLAUSE = "movieID = ";
     private final String POSTER_PATH = "posterpath";
     private final String TAG = DetailActivity.class.getSimpleName();
@@ -75,19 +74,10 @@ public class DetailActivity extends SortByMoviesMenu implements LoaderManager.Lo
         } else
             saveAsFavorite.setText(R.string.remove_from_favorite);
         mCursor.close();
-
-
-        // FetchFavoriteMovieDetails function is called for the Movie Details of the Movie clicked on Main Menu by passing
-        // the MovieId this Activity received from onClick function.
-
+        // Calling the Loader through InitializeLoader
         initializeLoader(MOVIE_DETAILS);
     }
 
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putInt(ACTIVITY_STATE, mLoaderId);
-//    }
 
     public void saveAsFavorite(View view) {
         final String saveMovie = "Save As Favorite";
@@ -217,18 +207,6 @@ public class DetailActivity extends SortByMoviesMenu implements LoaderManager.Lo
     public void onLoaderReset(Loader loader) {
 
     }
-
-//    private void initializeLoader() {
-//
-//        LoaderManager loaderManager = getSupportLoaderManager();
-//        Loader<String> movieSearchLoader = loaderManager.getLoader(MOVIE_DETAILS);
-//        if (movieSearchLoader == null) {
-//            loaderManager.initLoader(MOVIE_DETAILS, null, callback);
-//        } else {
-//            loaderManager.restartLoader(MOVIE_DETAILS, null, callback);
-//        }
-
-//    }
 
     /**
      * Setting all the details in the XML file
