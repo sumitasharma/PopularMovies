@@ -1,8 +1,10 @@
 apply plugin: 'com.android.application'
-
+//************************************//
+def POPULAR_MOVIES_API_KEY =  PopularMoviesAPIKey ?: '"Kindly Enter The API Key "'
+//************************************//
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.example.android.popularmoviesstage1sumita"
         minSdkVersion 15
@@ -10,6 +12,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildTypes.each {
+            it.buildConfigField 'String', "POPULAR_MOVIES_API_KEY", POPULAR_MOVIES_API_KEY
+        }
     }
     buildTypes {
         release {

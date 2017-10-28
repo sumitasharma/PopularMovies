@@ -3,6 +3,8 @@ package com.example.android.popularmoviesstage1sumita.utils;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.android.popularmoviesstage1sumita.BuildConfig;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,8 +30,7 @@ public class MoviesUtil {
     /**
      * Enter your API_KEY in String MOVIES_API_KEY for this Project to work
      */
-    private static final String MOVIES_API_KEY =
-            "";
+    public static final String MOVIES_API_KEY = BuildConfig.POPULAR_MOVIES_API_KEY;
     private static final String MOVIES_API_BASE_URL =
             "https://api.themoviedb.org/3/movie/";
     private static final String QUERY_PARAM = "api_key";
@@ -184,9 +185,9 @@ public class MoviesUtil {
         URL movieURL = MoviesUtil.buildUrl(movieId);
         URL reviewsURL = MoviesUtil.buildUrlForReviews(movieId);
         URL videosURL = MoviesUtil.buildUrlForVideos(movieId);
-        Log.i(TAG, "movie URL is:" + movieURL);
-        Log.i(TAG, "reviews URL is:" + reviewsURL);
-        Log.i(TAG, "videos URL is:" + videosURL);
+        Log.i(TAG,"movie URL is:" + movieURL);
+        Log.i(TAG,"reviews URL is:" + reviewsURL);
+        Log.i(TAG,"videos URL is:" + videosURL);
 
 
 
@@ -200,7 +201,7 @@ public class MoviesUtil {
             movieDetails = MoviesUtil.convertJsonToMoviesVideos(movieVideoResponse,movieDetails);
 
         } catch (IOException | JSONException e) {
-            Log.i(TAG, "Exception caught in getCompleteMovieDetails" + e.getMessage());
+            Log.i(TAG,"Exception caught in getCompleteMovieDetails"+ e.getMessage());
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
         }

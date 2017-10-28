@@ -21,6 +21,7 @@ import com.example.android.popularmoviesstage1sumita.utils.FetchApiMoviesLoader;
 import com.example.android.popularmoviesstage1sumita.utils.FetchSqlMoviesLoader;
 import com.example.android.popularmoviesstage1sumita.utils.MovieDetails;
 import com.example.android.popularmoviesstage1sumita.utils.MoviesAdapter;
+import com.example.android.popularmoviesstage1sumita.utils.MoviesUtil;
 import com.example.android.popularmoviesstage1sumita.utils.SortByMoviesMenu;
 
 
@@ -58,6 +59,8 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
         }
         // initializeLoader();
         initializeLoader(mLoaderId);
+
+
     }
 
 
@@ -101,14 +104,13 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
     }
 
 
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ACTIVITY_STATE, this.mLoaderId);
     }
 
-    public void initializeLoader(int loaderId) {
+    protected void initializeLoader(int loaderId) {
         this.mLoaderId = loaderId;
 
         LoaderManager loaderManager = getSupportLoaderManager();
@@ -175,13 +177,13 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
         super.onCreateLoader(mLoaderId, args);
         checkIntent();
         if (id == POPULAR_MOVIE_LOADER) {
-                this.setTitle(R.string.screen_label_popular);
+            this.setTitle(R.string.screen_label_popular);
             return new FetchApiMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this, POPULARITY);
         } else if (id == RATING_MOVIE_LOADER) {
-                this.setTitle(R.string.screen_label_rating);
+            this.setTitle(R.string.screen_label_rating);
             return new FetchApiMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this, RATINGS);
         } else if (id == FAVORITE_MOVIE_LOADER) {
-                this.setTitle(R.string.screen_label_favorite);
+            this.setTitle(R.string.screen_label_favorite);
             return new FetchSqlMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this);
         } else {
             Log.i(TAG, "onCreateLoader default is called" + mLoaderId);
@@ -189,7 +191,7 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
             return new FetchApiMoviesLoader(this, mMoviesRecyclerView, mMovieDetails, this, this, POPULARITY);
         }
 
-        }
+    }
 
 
     @Override
@@ -208,13 +210,13 @@ public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.Movi
                 }
                 break;
             default:
-                if (!isOnline()) {
-                    Toast.makeText(this, "No Internet Connection or API Limit exceeded.Connect and then choose from Sort By Menu", Toast.LENGTH_LONG).show();
+                if (!isOnline() || MoviesUtil.MOVIES_API_KEY.equals("")) {
+                    Toast.makeText(this, "No Internet Connection. Connect and then choose from Sort By Menu / API Key not set or API Limit exceeded. Kindly check and restart Application.",Toast.LENGTH_LONG).show();
                     Log.i(TAG, "Creating Toast");
                 } else {
-                MoviesAdapter moviesAdapter;
-                moviesAdapter = new MoviesAdapter(mMovieDetails, this, this);
-                mMoviesRecyclerView.setAdapter(moviesAdapter);
+                    MoviesAdapter moviesAdapter;
+                    moviesAdapter = new MoviesAdapter(mMovieDetails, this, this);
+                    mMoviesRecyclerView.setAdapter(moviesAdapter);
                     break;
                 }
 

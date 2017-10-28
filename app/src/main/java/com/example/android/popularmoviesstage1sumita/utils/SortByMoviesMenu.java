@@ -38,16 +38,6 @@ public class SortByMoviesMenu extends AppCompatActivity implements LoaderManager
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ACTIVITY_STATE, this.mLoaderId);
