@@ -61,7 +61,7 @@ public class MovieContentProvider extends ContentProvider {
         switch (match) {
             // Query for the tasks directory
             case FAVORITE_MOVIES:
-                retCursor =  db.query(TABLE_NAME,
+                retCursor = db.query(TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -73,10 +73,10 @@ public class MovieContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        try{
-        // COMPLETED (4) Set a notification URI on the Cursor and return that Cursor
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);}
-        catch (NullPointerException e){
+        try {
+            // COMPLETED (4) Set a notification URI on the Cursor and return that Cursor
+            retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -102,9 +102,9 @@ public class MovieContentProvider extends ContentProvider {
             case FAVORITE_MOVIES:
                 // Inserting values into tasks table
                 long id = db.insert(TABLE_NAME, null, values);
-                if ( id > 0 ) {
+                if (id > 0) {
                     returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, id);
-                    Log.i(TAG,"inserted "+returnUri.toString());
+                    Log.i(TAG, "inserted " + returnUri.toString());
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
@@ -114,14 +114,14 @@ public class MovieContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        try{
-        // COMPLETED (5) Notify the resolver if the uri has been changed, and return the newly inserted URI
-                getContext().getContentResolver().notifyChange(uri, null);}
-        catch(NullPointerException e){
+        try {
+            // COMPLETED (5) Notify the resolver if the uri has been changed, and return the newly inserted URI
+            getContext().getContentResolver().notifyChange(uri, null);
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         // Return constructed uri (this points to the newly inserted row of data)
-                 return returnUri;
+        return returnUri;
     }
 
     @Override
@@ -142,9 +142,9 @@ public class MovieContentProvider extends ContentProvider {
         }
 
         if (numRowsDeleted != 0) {
-            try{
-            getContext().getContentResolver().notifyChange(uri, null);}
-            catch (NullPointerException e){
+            try {
+                getContext().getContentResolver().notifyChange(uri, null);
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }

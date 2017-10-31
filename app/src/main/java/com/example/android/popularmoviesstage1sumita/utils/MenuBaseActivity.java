@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import com.example.android.popularmoviesstage1sumita.MainActivity;
 import com.example.android.popularmoviesstage1sumita.R;
 
-public class SortByMoviesMenu extends AppCompatActivity implements LoaderManager.LoaderCallbacks {
+public class MenuBaseActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks {
 
     protected static final int FAVORITE_MOVIE_LOADER = 10;
     protected static final int POPULAR_MOVIE_LOADER = 11;
@@ -21,7 +21,7 @@ public class SortByMoviesMenu extends AppCompatActivity implements LoaderManager
     protected static final int MOVIE_DETAILS = 15;
     protected static final String ACTIVITY_STATE = "activity_state";
     private final String TAG = MainActivity.class.getSimpleName();
-    private final LoaderManager.LoaderCallbacks<String[]> callback = SortByMoviesMenu.this;
+    private final LoaderManager.LoaderCallbacks<String[]> callback = MenuBaseActivity.this;
     protected int mLoaderId;
 
 

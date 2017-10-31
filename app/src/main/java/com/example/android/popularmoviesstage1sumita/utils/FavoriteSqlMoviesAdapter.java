@@ -64,12 +64,6 @@ public class FavoriteSqlMoviesAdapter extends RecyclerView.Adapter<FavoriteSqlMo
         }
         Log.i(TAG, "Inside onBindViewHolder" + position);
         mCursor.moveToPosition(position);
-//            mMovieDetails[position].setId(mCursor.getInt(mCursor.getColumnIndex((MovieContract.MovieEntry.COLUMN_ID))));
-//            mMovieDetails[position].setMovieTitle(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE)));
-//            mMovieDetails[position].setPosterPath(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH)));
-//            mMovieDetails[position].setRating(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING)));
-//            mMovieDetails[position].setReleaseDate(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE)));
-//            mMovieDetails[position].setSynopsis(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_SYNOPSIS)));
         Log.i(TAG, "onBindViewHolder posterPath is : " + mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH)));
         Picasso.with(mContext).load(mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH))).into(holder.mMovieImage);
 

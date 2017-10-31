@@ -19,13 +19,13 @@ import com.example.android.popularmoviesstage1sumita.utils.FavoriteSqlMoviesAdap
 import com.example.android.popularmoviesstage1sumita.utils.FavoriteSqlMoviesAdapter.FavoriteMoviesClickListener;
 import com.example.android.popularmoviesstage1sumita.utils.FetchApiMoviesLoader;
 import com.example.android.popularmoviesstage1sumita.utils.FetchSqlMoviesLoader;
+import com.example.android.popularmoviesstage1sumita.utils.MenuBaseActivity;
 import com.example.android.popularmoviesstage1sumita.utils.MovieDetails;
 import com.example.android.popularmoviesstage1sumita.utils.MoviesAdapter;
 import com.example.android.popularmoviesstage1sumita.utils.MoviesUtil;
-import com.example.android.popularmoviesstage1sumita.utils.SortByMoviesMenu;
 
 
-public class MainActivity extends SortByMoviesMenu implements MoviesAdapter.MoviesClickListener, FetchApiMoviesLoader.AsyncResponse, FetchSqlMoviesLoader.AsyncResponse, LoaderManager.LoaderCallbacks, FavoriteMoviesClickListener {
+public class MainActivity extends MenuBaseActivity implements MoviesAdapter.MoviesClickListener, FetchApiMoviesLoader.AsyncResponse, FetchSqlMoviesLoader.AsyncResponse, LoaderManager.LoaderCallbacks, FavoriteMoviesClickListener {
     private final String TAG = MainActivity.class.getSimpleName();
     private final String POPULARITY = "popular";
     private final String RATINGS = "top_rated";

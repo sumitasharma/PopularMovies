@@ -22,15 +22,15 @@ import android.widget.TextView;
 
 import com.example.android.popularmoviesstage1sumita.data.MovieContract;
 import com.example.android.popularmoviesstage1sumita.utils.DetailMovieLoader;
+import com.example.android.popularmoviesstage1sumita.utils.MenuBaseActivity;
 import com.example.android.popularmoviesstage1sumita.utils.MovieDetails;
 import com.example.android.popularmoviesstage1sumita.utils.MovieReviewsDetail;
 import com.example.android.popularmoviesstage1sumita.utils.MovieVideosDetail;
-import com.example.android.popularmoviesstage1sumita.utils.SortByMoviesMenu;
 import com.squareup.picasso.Picasso;
 
 import static com.example.android.popularmoviesstage1sumita.utils.MoviesUtil.TRAILER_URL;
 
-public class DetailActivity extends SortByMoviesMenu implements LoaderManager.LoaderCallbacks, DetailMovieLoader.MovieDetailAsyncResponse {
+public class DetailActivity extends MenuBaseActivity implements LoaderManager.LoaderCallbacks, DetailMovieLoader.MovieDetailAsyncResponse {
     private static final String WHERE_CLAUSE = "movieID = ";
     private final String POSTER_PATH = "posterpath";
     private final String TAG = DetailActivity.class.getSimpleName();
@@ -69,7 +69,7 @@ public class DetailActivity extends SortByMoviesMenu implements LoaderManager.Lo
 
         mCursor = getContentResolver().query(uri, null, where_clause, null, null);
 
-        if (mCursor.getCount() == 0) {
+        if (mCursor != null && mCursor.getCount() == 0) {
             saveAsFavorite.setText(R.string.save_as_favorite);
         } else
             saveAsFavorite.setText(R.string.remove_from_favorite);
