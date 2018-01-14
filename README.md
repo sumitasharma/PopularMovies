@@ -8,6 +8,5 @@ In this Project, you wil be able to:
 * View the reviews as well as trailers of the movie selected.
 ## Getting Started
 My app uses [this](https://www.themoviedb.org/documentation/api) API to retrieve movies. You have to put your own API key in order to build the app. Kindly provide it in app/build.gradle
-### Application Snapshot Preview
-
-https://media.giphy.com/media/xUNd9Xv7tdXREL8d1u/giphy.gif
+### Application Preview
+![Application Preview](MoviesApp.gif)
